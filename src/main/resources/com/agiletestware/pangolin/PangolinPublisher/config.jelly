@@ -1,0 +1,89 @@
+<!--
+Copyright (C) 2018 Agiletestware LLC
+	
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. 
+-->
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core"
+         xmlns:st="jelly:stapler"
+         xmlns:d="jelly:define"
+         xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson"
+         xmlns:f="/lib/form">
+ <f:block>
+  <d:taglib uri="local">
+    
+      <f:entry title="${%projectLabel}" field="testRailProject">
+        <f:textbox name="testRailProject" default="project" value="${instance.testRailProject()}"/>
+      </f:entry> 
+          
+      <f:entry title="${%testRailUserNameLabel}" field="testRailUserName">
+        <f:textbox name="testRailUserName" value="${instance.getTestRailUserName()}"/>
+      </f:entry>
+          
+      <f:entry title="${%testRailPasswordLabel}" field="testRailPassword">
+         <f:password name="testRailPassword" value="${instance.getTestRailPassword()}"/>
+      </f:entry>
+  
+  <f:entry title="${%listOftestRailUploadConfigTitle}" description="${%listOfUploadConfigDescription}">
+              
+      <f:repeatable var="configuration" items="${instance.configs}" add="${%addMoreButtonLabel}" minimum="1">
+      
+       <table width="100%" title="${%testRailUploadConfigLabel}">
+                                         
+           <f:entry title="${%testPathLabel}" field="testPath">
+            <f:textbox name="testPath" value="${configuration.getTestPath()}"/>
+          </f:entry>  
+                  
+          <f:entry title="${%formatLabel}" field="format">
+            <f:textbox name="format" default="junit" value="${configuration.getFormat()}"/>
+          </f:entry>
+          
+          <f:entry title="${%resultFilePatternLabel}" field="resultPattern"  description="${%description('http://ant.apache.org/manual/Types/fileset.html')}">
+            <f:textbox name="resultPattern"  default="**/surefire-reports/*.xml" value="${configuration.getResultPattern()}"   />
+          </f:entry>
+          
+           <f:entry title="${%testRunLabel}" field="testRun">
+            <f:textbox name="testRun" value="${configuration.getTestRun()}"/>
+          </f:entry> 
+          
+          <f:entry title="${%testPlanLabel}" field="testPlan">
+            <f:textbox name="testPlan" value="${configuration.getTestPlan()}"/>
+          </f:entry> 
+          
+          <f:entry title="${%milestonePathLabel}" field="milestonePath">
+            <f:textbox name="milestonePath" value="${configuration.getMilestonePath()}"/>
+          </f:entry> 
+                    
+          <f:entry title="${%testRailMappingsLabel}" field="customProperties" >
+            <f:textbox name="customProperties" value="${configuration.getCustomProperties()}"/>
+          </f:entry>
+          
+         <f:entry title="${%failBuildIfUploadUnsucessfullLabel}" field="failIfUploadFailed">
+			<f:checkbox name="failIfUploadFailed" checked="${configuration.getFailIfUploadFailed()}"/>
+		  </f:entry>
+		  		  
+         <f:entry title="">
+         <div align="right">
+         <f:repeatableDeleteButton />
+         </div>
+  </f:entry>
+  </table>
+    </f:repeatable>
+  </f:entry>
+  </d:taglib>
+</f:block>
+</j:jelly>
+
+
+

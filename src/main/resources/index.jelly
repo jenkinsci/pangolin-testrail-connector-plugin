@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+ Integrates Jenkins with TestRail by automatically publishing test results from Jenkins to TestRail using Pangolin server (http://www.agiletestware.com)
+</div>
