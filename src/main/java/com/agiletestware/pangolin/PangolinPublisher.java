@@ -87,7 +87,6 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	 * @param configs
 	 *            Configurations which are set for current job.
 	 */
-	@DataBoundConstructor
 	public PangolinPublisher(final String testRailProject, final String testRailUserName, final String testRailPassword,
 			final List<PangolinConfiguration> configs) {
 		this(testRailProject, testRailUserName, testRailPassword, configs, DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE,
@@ -106,12 +105,31 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 			final GlobalConfigFactory customGlobalConfigFactory, final PangolinClientFactory customPangolinClient, final CustomSecret customSecret) {
 		this.testRailProject = Util.fixEmptyAndTrim(testRailProject);
 		this.testRailUserName = Util.fixEmptyAndTrim(testRailUserName);
-		final String plainTextPassword = Util.fixEmpty(testRailPassword);
-		this.testRailPassword = plainTextPassword != null ? customSecret.getEncryptedValue(plainTextPassword) : null;
+		this.customSecret = customSecret;
+		setTestRailPasswordWithCustomSecretCheck(testRailPassword);
 		this.configs = configs;
 		this.globalConfigFactory = customGlobalConfigFactory;
 		this.pangolinClient = customPangolinClient;
-		this.customSecret = customSecret;
+
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param configs
+	 *            Configurations which are set for current job.
+	 * @param testRailProject
+	 *            the test rail project
+	 * @param testRailUserName
+	 *            the test rail user name
+	 * @param testRailPassword
+	 *            the test rail password
+	 */
+	@DataBoundConstructor
+	public PangolinPublisher(final List<PangolinConfiguration> configs, final String testRailProject, final String testRailUserName,
+			final String testRailPassword) {
+		this(testRailProject, testRailUserName, testRailPassword, configs, DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE,
+				null);
 	}
 
 	/**
@@ -255,8 +273,16 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	 */
 	@DataBoundSetter
 	public void setTestRailPassword(final String testRailPassword) {
+		setTestRailPasswordWithCustomSecretCheck(testRailPassword);
+	}
+
+	private void setTestRailPasswordWithCustomSecretCheck(final String testRailPassword) {
 		final String plainTextPassword = Util.fixEmpty(testRailPassword);
-		this.testRailPassword = plainTextPassword != null ? customSecret.getEncryptedValue(plainTextPassword) : null;
+		if (customSecret == null) {
+			this.testRailPassword = plainTextPassword;
+		} else {
+			this.testRailPassword = plainTextPassword != null ? customSecret.getEncryptedValue(plainTextPassword) : null;
+		}
 	}
 
 	/**

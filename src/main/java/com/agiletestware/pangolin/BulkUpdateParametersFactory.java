@@ -60,16 +60,19 @@ public final class BulkUpdateParametersFactory {
 					throws Exception {
 		final BulkUpdateParameters params = new BulkUpdateParametersImpl();
 		params.setPangolinUrl(globalConfig.getPangolinUrl());
-
 		String testRailPassword = publisher.getTestRailPassword();
-		if (StringUtils.isNotEmpty(testRailPassword)) {
-			testRailPassword = pangolinClient.create(DefaultRetrofitFactory.THE_INSTANCE)
-					.getEncryptedPassword(customSecret.getPlainText(testRailPassword), new ConnectionConfig(globalConfig.getPangolinUrl(),
-							TimeUnit.MILLISECONDS.convert(globalConfig.getUploadTimeOut(), TimeUnit.MINUTES)));
+		if (customSecret == null) {
+			params.setTestRailPassword(testRailPassword);
+		} else {
+			if (StringUtils.isNotEmpty(testRailPassword)) {
+				testRailPassword = pangolinClient.create(DefaultRetrofitFactory.THE_INSTANCE)
+						.getEncryptedPassword(customSecret.getPlainText(testRailPassword), new ConnectionConfig(globalConfig.getPangolinUrl(),
+								TimeUnit.MILLISECONDS.convert(globalConfig.getUploadTimeOut(), TimeUnit.MINUTES)));
+			}
+			params.setTestRailPassword(
+					StringUtils.isNotEmpty(testRailPassword) ? testRailPassword : globalConfig.getTestRailPassword());
 		}
 
-		params.setTestRailPassword(
-				StringUtils.isNotEmpty(testRailPassword) ? testRailPassword : globalConfig.getTestRailPassword());
 		final String commonTestRailUserName = publisher.getTestRailUserName();
 		params.setTestRailUser(StringUtils.isNotEmpty(commonTestRailUserName) ? commonTestRailUserName : globalConfig.getTestRailUserName());
 		params.setTestRailUrl(globalConfig.getTestRailUrl());
