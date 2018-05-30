@@ -78,6 +78,25 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	/**
 	 * Constructor.
 	 *
+	 * @param configs
+	 *            Configurations which are set for current job.
+	 * @param testRailProject
+	 *            the test rail project
+	 * @param testRailUserName
+	 *            the test rail user name
+	 * @param testRailPassword
+	 *            the test rail password
+	 */
+	@DataBoundConstructor
+	public PangolinPublisher(final List<PangolinConfiguration> configs, final String testRailProject, final String testRailUserName,
+			final String testRailPassword) {
+		this(testRailProject, testRailUserName, testRailPassword, configs, DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE,
+				null);
+	}
+
+	/**
+	 * Constructor.
+	 *
 	 * @param testRailProject
 	 *            the test rail project
 	 * @param testRailUserName
@@ -87,7 +106,7 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	 * @param configs
 	 *            Configurations which are set for current job.
 	 */
-	public PangolinPublisher(final String testRailProject, final String testRailUserName, final String testRailPassword,
+	PangolinPublisher(final String testRailProject, final String testRailUserName, final String testRailPassword,
 			final List<PangolinConfiguration> configs) {
 		this(testRailProject, testRailUserName, testRailPassword, configs, DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE,
 				DefaultCustomSecret.THE_INSTANCE);
@@ -106,30 +125,16 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 		this.testRailProject = Util.fixEmptyAndTrim(testRailProject);
 		this.testRailUserName = Util.fixEmptyAndTrim(testRailUserName);
 		this.customSecret = customSecret;
-		setTestRailPasswordWithCustomSecretCheck(testRailPassword);
 		this.configs = configs;
 		this.globalConfigFactory = customGlobalConfigFactory;
 		this.pangolinClient = customPangolinClient;
 
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param configs
-	 *            Configurations which are set for current job.
-	 * @param testRailProject
-	 *            the test rail project
-	 * @param testRailUserName
-	 *            the test rail user name
-	 * @param testRailPassword
-	 *            the test rail password
-	 */
-	@DataBoundConstructor
-	public PangolinPublisher(final List<PangolinConfiguration> configs, final String testRailProject, final String testRailUserName,
-			final String testRailPassword) {
-		this(testRailProject, testRailUserName, testRailPassword, configs, DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE,
-				null);
+		final String plainTextPassword = Util.fixEmpty(testRailPassword);
+		if (customSecret == null || plainTextPassword == null) {
+			this.testRailPassword = plainTextPassword;
+		} else {
+			this.testRailPassword = customSecret.getEncryptedValue(plainTextPassword);
+		}
 	}
 
 	/**
