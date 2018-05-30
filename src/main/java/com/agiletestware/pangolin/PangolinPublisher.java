@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -299,6 +300,7 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	 *
 	 */
 	@Extension
+	@Symbol("pangolinTestRail")
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
 		/** The Constant CONFIGURATION_OBJECT_NAME. */
