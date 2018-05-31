@@ -44,9 +44,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
@@ -152,13 +150,6 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 		return BuildStepMonitor.NONE;
 	}
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public boolean perform(final AbstractBuild build, final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
-		return doUpdate(build, launcher, listener, build.getWorkspace());
-	}
-
-	// This function is called when use DSL
 	@Override
 	public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
 			throws InterruptedException, IOException {

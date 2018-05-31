@@ -16,7 +16,6 @@
 package com.agiletestware.pangolin;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -34,23 +33,22 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.Mockito;
 
 import com.agiletestware.pangolin.client.PangolinClient;
 import com.agiletestware.pangolin.client.PangolinClientFactory;
 import com.agiletestware.pangolin.encryption.CustomSecret;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
+import hudson.model.Job;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
 
 /***
- * Tests for{@link PangolinPublisher}.
+ * Tests for {@link PangolinPublisher}.
  *
  * @author Ayman BEN AMOR
  *
@@ -81,7 +79,7 @@ public class PangolinPublisherTest {
 	public void getConfigsTest() {
 		final PangolinPublisher pangolinPublisher = new PangolinPublisher("project", "user", "password",
 				createPangolinConfiguration(true), null, null, customSecret);
-		assertEquals(pangolinPublisher.getConfigs().size(), 1);
+		assertEquals(1, pangolinPublisher.getConfigs().size());
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -90,26 +88,23 @@ public class PangolinPublisherTest {
 		final PangolinClient client = mock(PangolinClient.class);
 		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenReturn(ENCRYPTED_PASSWORD);
 		final PangolinClientFactory clientFactory = (c) -> client;
-
-		final AbstractBuildImpl build = new AbstractBuildImpl(mock(AbstractProject.class), mock(EnvVars.class));
-		build.setWorkspace(new FilePath(tempFolder.newFile()));
-		final Launcher launcher = Mockito.mock(Launcher.class);
+		final RunImpl run = new RunImpl(mock(Job.class), mock(EnvVars.class));
+		final Launcher launcher = mock(Launcher.class);
 		final VirtualChannel channel = mock(VirtualChannel.class);
 		when(launcher.getChannel()).thenReturn(channel);
-		final BuildListener listener = Mockito.mock(BuildListener.class);
+		final TaskListener listener = mock(TaskListener.class);
 		when(listener.getLogger()).thenReturn(System.out);
 		final PangolinPublisher pangolinPublisher = new PangolinPublisher("testRailProject", "testRailUserName", "testRailPassword",
 				createPangolinConfiguration(true), globalConfigFactory, clientFactory, customSecret);
-		assertTrue(pangolinPublisher.perform(build, launcher, listener));
+		pangolinPublisher.perform(run, new FilePath(tempFolder.newFile()), launcher, listener);
 		verify(channel).call(any());
 	}
 
 	@Test
 	public void testPerformFailFlagTrue() throws Exception {
-		final String expectedLog = "Pangolin: Error occurred while uploading results to TestRail: null" + System.lineSeparator() +
-				"java.lang.NullPointerException" + System.lineSeparator() +
-				"Pangolin: Fail if upload flag is set to true -> mark build as failed" + System.lineSeparator();
-		addertPerformFail(true, expectedLog, false);
+		expectedEx.expect(AbortException.class);
+		expectedEx.expectMessage(Messages.logFailIfUploadTrue());
+		createPerformFail(true, new ByteArrayOutputStream());
 	}
 
 	@Test
@@ -117,7 +112,10 @@ public class PangolinPublisherTest {
 		final String expectedLog = "Pangolin: Error occurred while uploading results to TestRail: null" + System.lineSeparator() +
 				"java.lang.NullPointerException" + System.lineSeparator() +
 				"Pangolin: Fail if upload flag is set to false -> ignore errors in the build step" + System.lineSeparator();
-		addertPerformFail(false, expectedLog, true);
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		createPerformFail(false, out);
+		final String log = out.toString();
+		assertEquals(expectedLog, log);
 	}
 
 	@Test
@@ -130,47 +128,60 @@ public class PangolinPublisherTest {
 		assertPerformFails("");
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void assertPerformFails(final String url) throws Exception {
+	@Test
+	public void testPerformWithPipelineAndTestRailPasswordFromJenkinsfile() throws Exception {
+		assertPerformWithPipeline("fd4OMOXLJjkMR6e64RJh3Q==");
+	}
 
-		final PangolinClient client = mock(PangolinClient.class);
-		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenReturn(ENCRYPTED_PASSWORD);
-		final PangolinClientFactory clientFactory = (c) -> client;
-
-		expectedEx.expect(IllegalStateException.class);
-		expectedEx.expectMessage("Pangolin URL is not set, please set the correct value on Pangolin Global configuration page.");
-		final AbstractBuildImpl build = new AbstractBuildImpl(mock(AbstractProject.class), mock(EnvVars.class));
-		build.setWorkspace(new FilePath(tempFolder.newFile()));
-		final Launcher launcher = Mockito.mock(Launcher.class);
-		final BuildListener listener = Mockito.mock(BuildListener.class);
-		when(listener.getLogger()).thenReturn(System.out);
-		new PangolinPublisher("testRailProject", "testRailUserName", "testRailPassword", createPangolinConfiguration(true), new GlobalConfigFactoryImpl(url),
-				clientFactory, customSecret).perform(build, launcher,
-						listener);
+	@Test
+	public void testPerformWithPipelineAndTestRailPasswordFromGlobalConfig() throws Exception {
+		assertPerformWithPipeline(null);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void addertPerformFail(final boolean failOnFailure, final String expectedLog, final boolean expectedResult)
-			throws Exception {
-
+	private void assertPerformWithPipeline(final String testRailPasswordFromJenkinsfile) throws Exception {
 		final PangolinClient client = mock(PangolinClient.class);
 		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenReturn(ENCRYPTED_PASSWORD);
 		final PangolinClientFactory clientFactory = (c) -> client;
+		final RunImpl run = new RunImpl(mock(Job.class), mock(EnvVars.class));
+		final Launcher launcher = mock(Launcher.class);
+		final VirtualChannel channel = mock(VirtualChannel.class);
+		when(launcher.getChannel()).thenReturn(channel);
+		final TaskListener listener = mock(TaskListener.class);
+		when(listener.getLogger()).thenReturn(System.out);
+		final PangolinPublisher pangolinPublisher = new PangolinPublisher("testRailProject", "", testRailPasswordFromJenkinsfile,
+				createPangolinConfiguration(true), globalConfigFactory, clientFactory, null);
+		pangolinPublisher.perform(run, new FilePath(tempFolder.newFile()), launcher, listener);
+		verify(channel).call(any());
+	}
 
-		final AbstractBuildImpl<?, ?> build = new AbstractBuildImpl(mock(AbstractProject.class), mock(EnvVars.class));
-		build.setWorkspace(new FilePath(tempFolder.newFile()));
-		final Launcher launcher = Mockito.mock(Launcher.class);
-		final BuildListener listener = Mockito.mock(BuildListener.class);
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void assertPerformFails(final String url) throws Exception {
+		final PangolinClient client = mock(PangolinClient.class);
+		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenReturn(ENCRYPTED_PASSWORD);
+		final PangolinClientFactory clientFactory = (c) -> client;
+		expectedEx.expect(IllegalStateException.class);
+		expectedEx.expectMessage("Pangolin URL is not set, please set the correct value on Pangolin Global configuration page.");
+		final RunImpl run = new RunImpl(mock(Job.class), mock(EnvVars.class));
+		final Launcher launcher = mock(Launcher.class);
+		final TaskListener listener = mock(TaskListener.class);
+		when(listener.getLogger()).thenReturn(System.out);
+		new PangolinPublisher("testRailProject", "testRailUserName", "testRailPassword", createPangolinConfiguration(true), new GlobalConfigFactoryImpl(url),
+				clientFactory, customSecret).perform(run, new FilePath(tempFolder.newFile()), launcher, listener);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void createPerformFail(final boolean failOnFailure, final ByteArrayOutputStream out)
+			throws Exception {
+		final RunImpl run = new RunImpl(mock(Job.class), mock(EnvVars.class));
+		final Launcher launcher = mock(Launcher.class);
+		final TaskListener listener = mock(TaskListener.class);
 		final PrintStream stream = new PrintStream(out);
 		when(listener.getLogger()).thenReturn(stream);
 		when(launcher.getChannel()).thenThrow(NullPointerException.class);
 		final PangolinPublisher pangolinPublisher = new PangolinPublisher("testRailProject", "testRailUserName", "testRailPassword",
-				createPangolinConfiguration(failOnFailure), globalConfigFactory, clientFactory,
-				customSecret);
-		assertEquals(expectedResult, pangolinPublisher.perform(build, launcher, listener));
-		final String log = out.toString();
-		assertEquals(expectedLog, log);
+				createPangolinConfiguration(failOnFailure), globalConfigFactory, mock(PangolinClientFactory.class), customSecret);
+		pangolinPublisher.perform(run, new FilePath(tempFolder.newFile()), launcher, listener);
 	}
 
 	private static class GlobalConfigFactoryImpl implements GlobalConfigFactory {
@@ -199,22 +210,20 @@ public class PangolinPublisherTest {
 		return configs;
 	}
 
-	private static class AbstractBuildImpl<P extends AbstractProject<P, R>, R extends AbstractBuild<P, R>> extends AbstractBuild<P, R> {
+	private static class RunImpl<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, RunT>> extends Run<JobT, RunT> {
 
+		private final JobT job;
 		private final EnvVars envVars;
 
-		protected AbstractBuildImpl(final P job, final EnvVars envVars) throws IOException {
+		protected RunImpl(final JobT job, final EnvVars envVars) throws IOException {
 			super(job);
+			this.job = job;
 			this.envVars = envVars;
 		}
 
 		@Override
-		public void run() {
-		}
-
-		@Override
-		public void setWorkspace(final FilePath workspace) {
-			super.setWorkspace(workspace);
+		public JobT getParent() {
+			return job;
 		}
 
 		@Override
