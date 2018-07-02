@@ -34,8 +34,11 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.acegisecurity.Authentication;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -46,6 +49,9 @@ import com.agiletestware.pangolin.client.PangolinClientFactory;
 import com.agiletestware.pangolin.validator.CustomUrlAvailableValidator;
 
 import hudson.model.AbstractProject;
+import hudson.security.ACL;
+import hudson.security.AccessDeniedException2;
+import hudson.security.Permission;
 import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
 
@@ -66,6 +72,8 @@ public class GlobalConfigTest {
 	private static final int TIME_OUT = 1;
 	private static final String ENCRYPTED_PASSWORD = "encryptedPassword";
 
+	@Rule
+	public ExpectedException expected = ExpectedException.none();
 	private final Jenkins jenkins = mock(Jenkins.class);
 	private GlobalConfig globalConfig;
 	private final CustomUrlAvailableValidator alwaysValidValidator = mock(CustomUrlAvailableValidator.class);
@@ -74,6 +82,14 @@ public class GlobalConfigTest {
 	public void setUp() throws Exception {
 		PowerMockito.mockStatic(Jenkins.class);
 		PowerMockito.when(Jenkins.getInstance()).thenReturn(jenkins);
+		PowerMockito.when(Jenkins.getAuthentication()).thenCallRealMethod();
+		when(jenkins.getACL()).thenReturn(new ACL() {
+
+			@Override
+			public boolean hasPermission(final Authentication a, final Permission permission) {
+				return true;
+			}
+		});
 		globalConfig = spy(GlobalConfig.class);
 		doAnswer((i) -> null).when(globalConfig).save();
 		when(alwaysValidValidator.validate(any(), any())).thenReturn(FormValidation.ok());
@@ -177,6 +193,19 @@ public class GlobalConfigTest {
 		// try the same value
 		globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, ENCRYPTED_PASSWORD, TIME_OUT);
 		verifyNoMoreInteractions(client);
+	}
+
+	@Test
+	public void doSaveConnectionFailOnMissingPrivileges() {
+		expected.expect(AccessDeniedException2.class);
+		when(jenkins.getACL()).thenReturn(new ACL() {
+
+			@Override
+			public boolean hasPermission(final Authentication a, final Permission permission) {
+				return false;
+			}
+		});
+		globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, TEST_RAIL_PASSWORD, TIME_OUT);
 	}
 
 	@Test

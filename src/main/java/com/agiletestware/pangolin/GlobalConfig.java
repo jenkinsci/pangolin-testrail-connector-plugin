@@ -28,6 +28,7 @@ import javax.servlet.ServletException;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.verb.POST;
 
 import com.agiletestware.pangolin.client.DefaultPangolinClientFactory;
 import com.agiletestware.pangolin.client.DefaultRetrofitFactory;
@@ -45,6 +46,7 @@ import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
+import jenkins.model.Jenkins;
 
 /**
  * Global configuration for Pangolin plugin.
@@ -98,13 +100,14 @@ public class GlobalConfig extends GlobalConfiguration {
 	 * @return the form validation
 	 */
 	// GlobalSettings form validation
+	@POST
 	public FormValidation doSaveConnection(
 			@QueryParameter("pangolinUrl") final String pangolinUrl,
 			@QueryParameter("testRailUrl") final String testRailUrl,
 			@QueryParameter("testRailUserName") final String testRailUserName,
 			@QueryParameter("testRailPassword") final String testRailPassword,
 			@QueryParameter("uploadTimeOut") final int uploadTimeOut) {
-
+		Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
 		final String pangolinURLTrimmed = fixEmptyAndTrim(pangolinUrl);
 		final String testRailURLTrimmed = fixEmptyAndTrim(testRailUrl);
 		final String testRailUserNameTrimmed = fixEmptyAndTrim(testRailUserName);
