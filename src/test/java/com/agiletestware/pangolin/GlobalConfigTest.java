@@ -181,23 +181,22 @@ public class GlobalConfigTest {
 
 	@Test
 	public void doCheckPassPangolinURL() throws IOException, ServletException {
-		final List<String> urls = Arrays.asList("http://localhost:9090", "https://localhost:9090", "http://localhost",
-				"https://localhost", "  https://localhost  ");
+		final List<String> urls = Arrays.asList("http://localhost:9090", "https://localhost:9090", "  https://localhost:9090  ");
 		for (final String url : urls) {
 			assertEquals("Does not match for URL value: <" + url + ">", FormValidation.ok(),
-					globalConfig.doCheckPangolinURL(createAbstractProjectMock(),
+					globalConfig.doCheckPangolinUrl(createAbstractProjectMock(),
 							url));
 		}
 	}
 
 	@Test
 	public void doCheckFailPangolinURL() throws IOException, ServletException {
-		final List<String> urls = Arrays.asList("http://localhost:9090/", "asdsad", "http://localhost:sadsa",
+		final List<String> urls = Arrays.asList("http://localhost", "asdsad", "http://localhost:sadsa",
 				"", "  ", null);
 		for (final String url : urls) {
 			assertEquals("Does not match for URL value: <" + url + ">",
 					FormValidation.error(Messages.validPangolinUrlFormat()).toString(),
-					globalConfig.doCheckPangolinURL(createAbstractProjectMock(),
+					globalConfig.doCheckPangolinUrl(createAbstractProjectMock(),
 							url).toString());
 		}
 	}
@@ -208,7 +207,7 @@ public class GlobalConfigTest {
 				"  http://localhost:8908  ");
 		for (final String url : urls) {
 			assertEquals("Does not match for URL value: <" + url + ">", FormValidation.ok(),
-					globalConfig.doCheckTestRailURL(createAbstractProjectMock(),
+					globalConfig.doCheckTestRailUrl(createAbstractProjectMock(),
 							url));
 		}
 
@@ -216,11 +215,11 @@ public class GlobalConfigTest {
 
 	@Test
 	public void doCheckFailTestRailURL() throws IOException, ServletException {
-		final List<String> urls = Arrays.asList("assa", "localhost", "http:/sfda", "http://localshot:sdf", "http://localhost/", "", "  ", null);
+		final List<String> urls = Arrays.asList("assa", "localhost", "http:/sfda", "http://localshot:sdf", "", "  ", null);
 		for (final String url : urls) {
 			assertEquals("Does not match for URL value: <" + url + ">",
 					FormValidation.error(Messages.validTestRailUrlFormat()).toString(),
-					globalConfig.doCheckTestRailURL(createAbstractProjectMock(),
+					globalConfig.doCheckTestRailUrl(createAbstractProjectMock(),
 							url).toString());
 		}
 	}
