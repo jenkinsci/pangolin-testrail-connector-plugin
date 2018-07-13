@@ -15,6 +15,8 @@
  */
 package com.agiletestware.pangolin;
 
+import static com.agiletestware.pangolin.client.PangolinConstants.PANGOLIN_URL_REGEXP;
+import static com.agiletestware.pangolin.client.PangolinConstants.TEST_RAIL_URL_REGEXP;
 import static hudson.Util.fixEmptyAndTrim;
 
 import java.io.IOException;
@@ -62,9 +64,9 @@ public class GlobalConfig extends GlobalConfiguration {
 	private static final Validator<String, Void> TEST_RAIL_USER_VALIDATOR = new StringNotEmptyValidator<>(Messages.testRailUserIsRequired());
 	private static final Validator<String, Void> TEST_RAIL_PASSWORD_VALIDATOR = new StringNotEmptyValidator<>(Messages.testRailPasswordIsRequired());
 	private static final RegExpMatchValidator PANGOLIN_URL_REGEXP_VALIDATOR = new RegExpMatchValidator(
-			Messages.validPangolinUrlFormat(), "^(https?)://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:\\d*[^/])?$");
+			Messages.validPangolinUrlFormat(), PANGOLIN_URL_REGEXP);
 	private static final RegExpMatchValidator TEST_RAIL_URL_REGEXP_VALIDATOR = new RegExpMatchValidator(
-			Messages.validTestRailUrlFormat(), "^(https?)\\:\\/\\/[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:\\d*[^\\/])?$");
+			Messages.validTestRailUrlFormat(), TEST_RAIL_URL_REGEXP);
 	private String pangolinUrl;
 	private String testRailUrl;
 	private String testRailUserName;
@@ -154,7 +156,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 * @throws ServletException
 	 *             the servlet exception
 	 */
-	public FormValidation doCheckPangolinURL(@AncestorInPath final AbstractProject<?, ?> project, @QueryParameter final String pangolinUrl)
+	public FormValidation doCheckPangolinUrl(@AncestorInPath final AbstractProject<?, ?> project, @QueryParameter final String pangolinUrl)
 			throws IOException, ServletException {
 		return PANGOLIN_URL_REGEXP_VALIDATOR.validate(fixEmptyAndTrim(pangolinUrl), null);
 	}
@@ -172,7 +174,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 * @throws ServletException
 	 *             the servlet exception
 	 */
-	public FormValidation doCheckTestRailURL(@AncestorInPath final AbstractProject<?, ?> project, @QueryParameter final String testRailUrl)
+	public FormValidation doCheckTestRailUrl(@AncestorInPath final AbstractProject<?, ?> project, @QueryParameter final String testRailUrl)
 			throws IOException, ServletException {
 		return TEST_RAIL_URL_REGEXP_VALIDATOR.validate(fixEmptyAndTrim(testRailUrl), null);
 	}
