@@ -98,6 +98,11 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	}
 
 	@Override
+	public String closeRun() {
+		return Messages.closeRun();
+	}
+
+	@Override
 	public String milestonePath() {
 		return Messages.milestonePath();
 	}

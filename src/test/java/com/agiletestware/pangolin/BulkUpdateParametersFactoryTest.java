@@ -16,6 +16,7 @@
 package com.agiletestware.pangolin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -78,7 +79,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, TEST_RAIL_PASSWORD_OVERRIDING,
 				createPangolinConfiguration(true),
 				null, null, customSecret);
@@ -93,7 +94,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, TEST_RAIL_USERNAME_OVERRIDING, TEST_RAIL_PASSWORD,
 				createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
@@ -107,7 +108,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, null, createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
 		assertParams(params, TEST_RAIL_USERNAME, TEST_RAIL_PASSWORD);
@@ -119,7 +120,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, EMPTY_TEST_RAIL_PASSWORD,
 				createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
@@ -140,6 +141,7 @@ public class BulkUpdateParametersFactoryTest {
 		assertEquals(FORMAT, params.getReportFormat());
 		assertEquals(RESULT_PATTERN, params.getResultPattern());
 		assertEquals(CUSTOM_PROPERTIES, params.getCustomFields());
+		assertTrue(params.isCloseRun());
 	}
 
 	private GlobalConfig createGlobalConfigMock() {
@@ -155,7 +157,7 @@ public class BulkUpdateParametersFactoryTest {
 	private List<PangolinConfiguration> createPangolinConfiguration(final boolean failOnFailure) {
 		final List<PangolinConfiguration> configs = new ArrayList<>();
 		configs.add(new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, failOnFailure, TEST_RUN,
-				TEST_PLAN, MILESTONE_PATH));
+				TEST_PLAN, MILESTONE_PATH, true));
 		return configs;
 	}
 }

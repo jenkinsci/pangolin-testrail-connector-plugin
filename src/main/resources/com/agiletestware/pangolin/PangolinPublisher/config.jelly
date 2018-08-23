@@ -72,6 +72,10 @@ limitations under the License.
          <f:entry title="${%failBuildIfUploadUnsucessfullLabel}" field="failIfUploadFailed">
 			<f:checkbox name="failIfUploadFailed" checked="${configuration.getFailIfUploadFailed()}"/>
 		  </f:entry>
+		  
+		  <f:entry title="${%closeRunLabel}" field="closeRun">
+			<f:checkbox name="closeRun" checked="${configuration.isCloseRun()}"/>
+		  </f:entry>
 		  		  
          <f:entry title="">
          <div align="right">
