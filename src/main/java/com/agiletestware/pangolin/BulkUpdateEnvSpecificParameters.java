@@ -53,8 +53,18 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 	}
 
 	@Override
+	public boolean isCloseRun() {
+		return getParameters().isCloseRun();
+	}
+
+	@Override
+	public void setCloseRun(final boolean closeRun) {
+		getParameters().setCloseRun(closeRun);
+	}
+
+	@Override
 	public String toString() {
-		return super.toString() + ", Result Pattern=" + getResultPattern();
+		return super.toString() + ", Result Pattern=" + getResultPattern() + ", Close Run=" + isCloseRun();
 	}
 
 }
