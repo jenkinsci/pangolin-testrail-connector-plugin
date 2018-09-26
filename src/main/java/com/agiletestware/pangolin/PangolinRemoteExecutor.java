@@ -23,6 +23,7 @@ import com.agiletestware.pangolin.client.DefaultPangolinClientFactory;
 import com.agiletestware.pangolin.client.PangolinClientFactory;
 import com.agiletestware.pangolin.client.upload.BulkUpdateParameters;
 import com.agiletestware.pangolin.client.upload.TestResultsUploader;
+import com.agiletestware.pangolin.shared.model.testresults.UploadResponse.RunInfo;
 
 import hudson.FilePath;
 import hudson.model.TaskListener;
@@ -33,7 +34,7 @@ import hudson.remoting.Callable;
  *
  * @author Sergey Oplavin.
  */
-public class PangolinRemoteExecutor implements Callable<Void, Exception>, Serializable {
+public class PangolinRemoteExecutor implements Callable<RunInfo, Exception>, Serializable {
 
 	private static final long serialVersionUID = -8132991309548833113L;
 	private final JenkinsBuildLogger logger;
@@ -65,9 +66,8 @@ public class PangolinRemoteExecutor implements Callable<Void, Exception>, Serial
 	}
 
 	@Override
-	public Void call() throws Exception {
-		execute();
-		return null;
+	public RunInfo call() throws Exception {
+		return execute();
 	}
 
 	/**
@@ -76,10 +76,10 @@ public class PangolinRemoteExecutor implements Callable<Void, Exception>, Serial
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void execute() throws Exception {
+	public RunInfo execute() throws Exception {
 		final DefaultReportFilesProvider reportFilesProvider = new DefaultReportFilesProvider(workspace);
 		final TestResultsUploader testResultsUploader = new TestResultsUploader(clientFactory, DefaultMessagesProvider.THE_INSTANCE, reportFilesProvider);
-		testResultsUploader.upload(parameters, logger);
+		return testResultsUploader.upload(parameters, logger);
 	}
 
 	@Override

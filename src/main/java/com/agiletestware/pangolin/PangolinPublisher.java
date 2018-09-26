@@ -36,6 +36,7 @@ import com.agiletestware.pangolin.client.PangolinClientFactory;
 import com.agiletestware.pangolin.client.upload.BulkUpdateParameters;
 import com.agiletestware.pangolin.encryption.CustomSecret;
 import com.agiletestware.pangolin.encryption.DefaultCustomSecret;
+import com.agiletestware.pangolin.shared.model.testresults.UploadResponse.RunInfo;
 import com.agiletestware.pangolin.util.PangolinUtility;
 import com.agiletestware.pangolin.validator.GlobalConfigValidator;
 
@@ -211,7 +212,10 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 		if (channel == null) {
 			throw new IllegalStateException("VirtualChannel is null");
 		}
-		channel.call(remoteExecutor);
+		final RunInfo runInfo = channel.call(remoteExecutor);
+		if (runInfo != null) {
+			run.addAction(new PangolinRunLinkAction(runInfo));
+		}
 	}
 
 	/**

@@ -16,6 +16,7 @@
 package com.agiletestware.pangolin;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -80,8 +81,8 @@ public class PangolinRemoteExecutorTest {
 		final int runId = 42;
 		final PangolinClientFactory clientFactory = mock(PangolinClientFactory.class);
 		final PangolinClient client = mock(PangolinClient.class);
-		when(clientFactory.create(any())).thenReturn(client);
 		when(client.sendResultsToTestrail(any(), any())).thenReturn(new UploadResponse(Arrays.asList(new RunInfo(runId, "url"))));
+		when(clientFactory.create(any())).thenReturn(client);
 		final BulkUpdateParameters params = createBulkUpdateParametersImpl();
 		params.setResultPattern("**/*.xml");
 		final File file1 = tempFolder.newFile("report1.xml");
@@ -89,7 +90,8 @@ public class PangolinRemoteExecutorTest {
 		final UploadResultsParameters expected1 = new UploadTestReportParameters(params, file1);
 		final UploadResultsParameters expected2 = new UploadTestReportParameters(params, file2);
 		expected2.setTestRunId(runId);
-		new PangolinRemoteExecutor(new FilePath(tempFolder.getRoot()), params, listener, clientFactory).execute();
+		final RunInfo runInfo = new PangolinRemoteExecutor(new FilePath(tempFolder.getRoot()), params, listener, clientFactory).execute();
+		assertEquals("url", runInfo.getRunUrl());
 		verify(client).sendResultsToTestrail(eq(expected1), any());
 		verify(client).sendResultsToTestrail(eq(expected2), any());
 		verify(log, times(2)).println("Results have been added to run: url");
