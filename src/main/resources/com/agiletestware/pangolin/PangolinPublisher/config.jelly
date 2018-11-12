@@ -63,15 +63,15 @@ limitations under the License.
           
           <f:entry title="${%milestonePathLabel}" field="milestonePath">
             <f:textbox name="milestonePath" value="${configuration.getMilestonePath()}"/>
-          </f:entry> 
-          
-          <f:entry title="${%closeRunLabel}" field="closeRun">
-			<f:checkbox name="closeRun" checked="${configuration.isCloseRun()}"/>
-		  </f:entry>
+          </f:entry>         
                     
           <f:entry title="${%testRailMappingsLabel}" field="customProperties" >
             <f:textbox name="customProperties" value="${configuration.getCustomProperties()}"/>
           </f:entry>
+          
+          <f:entry title="${%closeRunLabel}" field="closeRun">
+			<f:checkbox name="closeRun" checked="${configuration.isCloseRun()}"/>
+		  </f:entry>
           
          <f:entry title="${%failBuildIfUploadUnsucessfullLabel}" field="failIfUploadFailed">
 			<f:checkbox name="failIfUploadFailed" checked="${configuration.getFailIfUploadFailed()}"/>
