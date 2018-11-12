@@ -40,6 +40,7 @@ public final class PangolinConfiguration implements Serializable {
 	private String testRun;
 	private String testPlan;
 	private String milestonePath;
+	private boolean closeRun;
 
 	/**
 	 * Instantiates a new pangolin configuration.
@@ -60,11 +61,12 @@ public final class PangolinConfiguration implements Serializable {
 	 *            the test plan
 	 * @param milestonePath
 	 *            the milestone path
+	 * @param closeRun
+	 *            the close run
 	 */
 	@DataBoundConstructor
-	public PangolinConfiguration(final String testPath, final String format,
-			final String resultPattern, final String customProperties,
-			final boolean failIfUploadFailed, final String testRun, final String testPlan, final String milestonePath) {
+	public PangolinConfiguration(final String testPath, final String format, final String resultPattern, final String customProperties,
+			final boolean failIfUploadFailed, final String testRun, final String testPlan, final String milestonePath, final boolean closeRun) {
 		super();
 		this.testPath = Util.fixEmptyAndTrim(testPath);
 		this.format = Util.fixEmptyAndTrim(format);
@@ -74,6 +76,7 @@ public final class PangolinConfiguration implements Serializable {
 		this.testRun = Util.fixEmptyAndTrim(testRun);
 		this.testPlan = Util.fixEmptyAndTrim(testPlan);
 		this.milestonePath = Util.fixEmptyAndTrim(milestonePath);
+		this.closeRun = closeRun;
 	}
 
 	/**
@@ -230,6 +233,26 @@ public final class PangolinConfiguration implements Serializable {
 	@DataBoundSetter
 	public void setMilestonePath(final String milestonePath) {
 		this.milestonePath = milestonePath;
+	}
+
+	/**
+	 * Checks if is close run.
+	 *
+	 * @return true, if is close run.
+	 */
+	public boolean isCloseRun() {
+		return this.closeRun;
+	}
+
+	/**
+	 * Sets the close run.
+	 *
+	 * @param closeRun
+	 *            the new close run.
+	 */
+	@DataBoundSetter
+	public void setCloseRun(final boolean closeRun) {
+		this.closeRun = closeRun;
 	}
 
 }

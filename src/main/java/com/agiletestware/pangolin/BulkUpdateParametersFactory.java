@@ -80,6 +80,7 @@ public final class BulkUpdateParametersFactory {
 		params.setTestRun(config.getTestRun());
 		params.setTestPlan(config.getTestPlan());
 		params.setMilestonePath(config.getMilestonePath());
+		params.setCloseRun(config.isCloseRun());
 		return params;
 	}
 }

@@ -17,6 +17,7 @@ package com.agiletestware.pangolin;
 
 import com.agiletestware.pangolin.client.upload.BulkUpdateParameters;
 import com.agiletestware.pangolin.client.upload.MessagesProvider;
+import com.agiletestware.pangolin.shared.model.testresults.UploadResponse.RunInfo;
 
 /**
  * Default implementation of {@link MessagesProvider}
@@ -98,6 +99,11 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	}
 
 	@Override
+	public String closeRun() {
+		return Messages.closeRun();
+	}
+
+	@Override
 	public String milestonePath() {
 		return Messages.milestonePath();
 	}
@@ -120,5 +126,10 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	@Override
 	public String runUrlMessage() {
 		return Messages.runUrlMessage();
+	}
+
+	@Override
+	public String closingRunLogMessage(final RunInfo runInfo) {
+		return Messages.closingRunLogMsg(runInfo.getRunUrl());
 	}
 }
