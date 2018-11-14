@@ -103,6 +103,11 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	}
 
 	@Override
+	public String customResultFields() {
+		return Messages.customResultFields();
+	}
+
+	@Override
 	public String timeout() {
 		return Messages.timeOut();
 	}
@@ -121,4 +126,6 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	public String runUrlMessage() {
 		return Messages.runUrlMessage();
 	}
+
+
 }

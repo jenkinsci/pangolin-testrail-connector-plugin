@@ -40,6 +40,7 @@ public final class PangolinConfiguration implements Serializable {
 	private String testRun;
 	private String testPlan;
 	private String milestonePath;
+	private String customResultFields;
 
 	/**
 	 * Instantiates a new pangolin configuration.
@@ -64,7 +65,7 @@ public final class PangolinConfiguration implements Serializable {
 	@DataBoundConstructor
 	public PangolinConfiguration(final String testPath, final String format,
 			final String resultPattern, final String customProperties,
-			final boolean failIfUploadFailed, final String testRun, final String testPlan, final String milestonePath) {
+			final boolean failIfUploadFailed, final String testRun, final String testPlan, final String milestonePath, final String customResultFields) {
 		super();
 		this.testPath = Util.fixEmptyAndTrim(testPath);
 		this.format = Util.fixEmptyAndTrim(format);
@@ -74,6 +75,7 @@ public final class PangolinConfiguration implements Serializable {
 		this.testRun = Util.fixEmptyAndTrim(testRun);
 		this.testPlan = Util.fixEmptyAndTrim(testPlan);
 		this.milestonePath = Util.fixEmptyAndTrim(milestonePath);
+		this.customResultFields = Util.fixEmptyAndTrim(customResultFields);
 	}
 
 	/**
@@ -230,6 +232,26 @@ public final class PangolinConfiguration implements Serializable {
 	@DataBoundSetter
 	public void setMilestonePath(final String milestonePath) {
 		this.milestonePath = milestonePath;
+	}
+
+	/**
+	 * Gets the custom result fields.
+	 *
+	 * @return the result fields.
+	 */
+	public String getCustomResultFields() {
+		return customResultFields;
+	}
+
+	/**
+	 * Sets the custom result fields.
+	 *
+	 * @param customResultFields
+	 *            the new result fields.
+	 */
+	@DataBoundSetter
+	public void setCustomResultFields(final String customResultFields) {
+		this.customResultFields = customResultFields;
 	}
 
 }

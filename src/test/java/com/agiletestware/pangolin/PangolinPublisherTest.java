@@ -206,7 +206,7 @@ public class PangolinPublisherTest {
 	private List<PangolinConfiguration> createPangolinConfiguration(final boolean failOnFailure) {
 		final List<PangolinConfiguration> configs = new ArrayList<>();
 		configs.add(new PangolinConfiguration("testPathUrl", "Format", "resultPattern", "customProperties", failOnFailure, "testRun",
-				"testPlan", "milestonePath"));
+				"testPlan", "milestonePath", "resultFields"));
 		return configs;
 	}
 

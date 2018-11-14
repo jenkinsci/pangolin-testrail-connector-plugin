@@ -56,8 +56,7 @@ public final class BulkUpdateParametersFactory {
 	 *             the exception
 	 */
 	public static BulkUpdateParameters create(final GlobalConfig globalConfig, final PangolinConfiguration config, final PangolinPublisher publisher,
-			final PangolinClientFactory pangolinClient, final CustomSecret customSecret)
-					throws Exception {
+			final PangolinClientFactory pangolinClient, final CustomSecret customSecret) throws Exception {
 		final BulkUpdateParameters params = new BulkUpdateParametersImpl();
 		params.setPangolinUrl(globalConfig.getPangolinUrl());
 		String testRailPassword = publisher.getTestRailPassword();
@@ -80,6 +79,7 @@ public final class BulkUpdateParametersFactory {
 		params.setTestRun(config.getTestRun());
 		params.setTestPlan(config.getTestPlan());
 		params.setMilestonePath(config.getMilestonePath());
+		params.setCustomResultFields(config.getCustomResultFields());
 		return params;
 	}
 }
