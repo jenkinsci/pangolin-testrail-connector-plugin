@@ -147,10 +147,21 @@ public class UpdateEnvSpecificParameters<T extends UpdateParameters> extends Bas
 	}
 
 	@Override
+	public String getCustomResultFields() {
+		return expand(getParameters().getCustomResultFields());
+	}
+
+	@Override
+	public void setCustomResultFields(final String customResultFields) {
+		getParameters().setCustomResultFields(customResultFields);
+	}
+
+	@Override
 	public String toString() {
 		return super.toString() + ", TestRail URL= " + getTestRailUrl() + ", TestRail User= " + getTestRailUser() + ", TimeOut= " + getTimeOut()
 		+ ", Project= " + getProject() + ", Test Path= " + getTestPath() + ", Report Format= " + getReportFormat() + ", Test Run= " + getTestRun()
-				+ ", Test Plan= " + getTestPlan() + ", Milestone Path= " + getMilestonePath() + ", Custom Fields= " + getCustomFields();
+		+ ", Test Plan= " + getTestPlan() + ", Milestone Path= " + getMilestonePath() + ", Custom Fields= " + getCustomFields()
+		+ ", Custom Result Fields= " + getCustomResultFields();
 	}
 
 }

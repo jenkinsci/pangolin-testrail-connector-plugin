@@ -60,6 +60,7 @@ public class BulkUpdateParametersFactoryTest {
 	private static final boolean FAIL_IF_UPLOAD_FAILED = true;
 	private static final String ENCRYPTED_PASSWORD = "encryptedPassword";
 	private static final String ENCRYPTED_PASSWORD_OVERRIDING = "encryptedPasswordOverridding";
+	private static final String CUSTOM_RESULT_FIELDS = "f1=v1,f2=v2";
 
 	private CustomSecret customSecret;
 
@@ -79,7 +80,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, TEST_RAIL_PASSWORD_OVERRIDING,
 				createPangolinConfiguration(true),
 				null, null, customSecret);
@@ -94,7 +95,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, TEST_RAIL_USERNAME_OVERRIDING, TEST_RAIL_PASSWORD,
 				createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
@@ -108,7 +109,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, null, createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
 		assertParams(params, TEST_RAIL_USERNAME, TEST_RAIL_PASSWORD);
@@ -120,7 +121,7 @@ public class BulkUpdateParametersFactoryTest {
 		final PangolinClientFactory clientFactory = (c) -> client;
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
-				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true);
+				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, EMPTY_TEST_RAIL_PASSWORD,
 				createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
@@ -142,6 +143,7 @@ public class BulkUpdateParametersFactoryTest {
 		assertEquals(RESULT_PATTERN, params.getResultPattern());
 		assertEquals(CUSTOM_PROPERTIES, params.getCustomFields());
 		assertTrue(params.isCloseRun());
+		assertEquals(CUSTOM_RESULT_FIELDS, params.getCustomResultFields());
 	}
 
 	private GlobalConfig createGlobalConfigMock() {
@@ -157,7 +159,7 @@ public class BulkUpdateParametersFactoryTest {
 	private List<PangolinConfiguration> createPangolinConfiguration(final boolean failOnFailure) {
 		final List<PangolinConfiguration> configs = new ArrayList<>();
 		configs.add(new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, failOnFailure, TEST_RUN,
-				TEST_PLAN, MILESTONE_PATH, true));
+				TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS));
 		return configs;
 	}
 }
