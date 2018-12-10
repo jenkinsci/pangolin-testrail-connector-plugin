@@ -66,11 +66,11 @@ limitations under the License.
           </f:entry>
                     
           <f:entry title="${%testRailMappingsLabel}" field="customProperties" >
-            <f:textbox name="customProperties" value="${configuration.getCustomProperties()}"/>
+          	<f:textarea name="customProperties" value="${configuration.getCustomProperties()}"/>            
           </f:entry>
           
-          <f:entry title="${%customResultFieldsLabel}" field="customResultFields" >
-            <f:textbox name="customResultFields" value="${configuration.getCustomResultFields()}"/>
+          <f:entry title="${%customResultFieldsLabel}" field="customResultFields" >            
+            <f:textarea name="customResultFields" value="${configuration.getCustomResultFields()}"/>
           </f:entry>
           
           <f:entry title="${%closeRunLabel}" field="closeRun">
