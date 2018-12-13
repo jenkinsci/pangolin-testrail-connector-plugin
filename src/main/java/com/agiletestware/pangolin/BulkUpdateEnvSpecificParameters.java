@@ -67,4 +67,14 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 		return super.toString() + ", Result Pattern=" + getResultPattern() + ", Close Run=" + isCloseRun();
 	}
 
+	@Override
+	public String getCaseNameToIdMappings() {
+		return expand(getParameters().getCaseNameToIdMappings());
+	}
+
+	@Override
+	public void setCaseNameToIdMappings(final String mappings) {
+		getParameters().setCaseNameToIdMappings(mappings);
+	}
+
 }

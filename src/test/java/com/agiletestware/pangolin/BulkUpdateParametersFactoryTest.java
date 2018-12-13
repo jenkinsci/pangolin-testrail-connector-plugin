@@ -61,6 +61,7 @@ public class BulkUpdateParametersFactoryTest {
 	private static final String ENCRYPTED_PASSWORD = "encryptedPassword";
 	private static final String ENCRYPTED_PASSWORD_OVERRIDING = "encryptedPasswordOverridding";
 	private static final String CUSTOM_RESULT_FIELDS = "f1=v1,f2=v2";
+	private static final String CASE_NAME_TO_ID_MAP = "testname1=1 \n testname2=2";
 
 	private CustomSecret customSecret;
 
@@ -81,6 +82,7 @@ public class BulkUpdateParametersFactoryTest {
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
 				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
+		config.setCaseNameToIdMap(CASE_NAME_TO_ID_MAP);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, TEST_RAIL_PASSWORD_OVERRIDING,
 				createPangolinConfiguration(true),
 				null, null, customSecret);
@@ -96,6 +98,7 @@ public class BulkUpdateParametersFactoryTest {
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
 				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
+		config.setCaseNameToIdMap(CASE_NAME_TO_ID_MAP);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, TEST_RAIL_USERNAME_OVERRIDING, TEST_RAIL_PASSWORD,
 				createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
@@ -110,6 +113,7 @@ public class BulkUpdateParametersFactoryTest {
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
 				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
+		config.setCaseNameToIdMap(CASE_NAME_TO_ID_MAP);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, null, createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
 		assertParams(params, TEST_RAIL_USERNAME, TEST_RAIL_PASSWORD);
@@ -122,6 +126,7 @@ public class BulkUpdateParametersFactoryTest {
 		final GlobalConfig globalConfig = createGlobalConfigMock();
 		final PangolinConfiguration config = new PangolinConfiguration(TEST_PATH, FORMAT, RESULT_PATTERN, CUSTOM_PROPERTIES, FAIL_IF_UPLOAD_FAILED,
 				TEST_RUN, TEST_PLAN, MILESTONE_PATH, true, CUSTOM_RESULT_FIELDS);
+		config.setCaseNameToIdMap(CASE_NAME_TO_ID_MAP);
 		final PangolinPublisher publisher = new PangolinPublisher(TEST_RAIL_PROJECT, null, EMPTY_TEST_RAIL_PASSWORD,
 				createPangolinConfiguration(true), null, null, customSecret);
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, publisher, clientFactory, customSecret);
@@ -144,6 +149,7 @@ public class BulkUpdateParametersFactoryTest {
 		assertEquals(CUSTOM_PROPERTIES, params.getCustomFields());
 		assertTrue(params.isCloseRun());
 		assertEquals(CUSTOM_RESULT_FIELDS, params.getCustomResultFields());
+		assertEquals(CASE_NAME_TO_ID_MAP, params.getCaseNameToIdMappings());
 	}
 
 	private GlobalConfig createGlobalConfigMock() {

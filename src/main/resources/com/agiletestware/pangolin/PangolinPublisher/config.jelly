@@ -73,6 +73,10 @@ limitations under the License.
             <f:textarea name="customResultFields" value="${configuration.getCustomResultFields()}"/>
           </f:entry>
           
+           <f:entry title="${%caseNameToIdMapLabel}" field="caseNameToIdMap" >            
+            <f:textarea name="caseNameToIdMap" value="${configuration.getCaseNameToIdMap()}"/>
+          </f:entry>
+          
           <f:entry title="${%closeRunLabel}" field="closeRun">
 			<f:checkbox name="closeRun" checked="${configuration.isCloseRun()}"/>
 		  </f:entry>

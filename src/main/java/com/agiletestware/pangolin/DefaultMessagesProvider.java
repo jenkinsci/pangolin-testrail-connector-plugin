@@ -137,4 +137,9 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	public String closingRunLogMessage(final RunInfo runInfo) {
 		return Messages.closingRunLogMsg(runInfo.getRunUrl());
 	}
+
+	@Override
+	public String caseNameToIdMap() {
+		return Messages.caseNameToIdMap();
+	}
 }
