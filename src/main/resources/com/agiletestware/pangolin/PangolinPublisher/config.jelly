@@ -73,10 +73,6 @@ limitations under the License.
             <f:textarea name="customResultFields" value="${configuration.getCustomResultFields()}"/>
           </f:entry>
           
-           <f:entry title="${%caseNameToIdMapLabel}" field="caseNameToIdMap" >            
-            <f:textarea name="caseNameToIdMap" value="${configuration.getCaseNameToIdMap()}"/>
-          </f:entry>
-          
           <f:entry title="${%closeRunLabel}" field="closeRun">
 			<f:checkbox name="closeRun" checked="${configuration.isCloseRun()}"/>
 		  </f:entry>
@@ -84,7 +80,13 @@ limitations under the License.
          <f:entry title="${%failBuildIfUploadUnsucessfullLabel}" field="failIfUploadFailed">
 			<f:checkbox name="failIfUploadFailed" checked="${configuration.getFailIfUploadFailed()}"/>
 		  </f:entry>
-		  		  		  
+		 
+		 <f:advanced>
+		 	<f:entry title="${%caseNameToIdMapLabel}" field="caseNameToIdMap" >            
+            	<f:textarea name="caseNameToIdMap" value="${configuration.getCaseNameToIdMap()}"/>
+          	</f:entry>
+		 </f:advanced>
+		 
          <f:entry title="">
          <div align="right">
          <f:repeatableDeleteButton />
