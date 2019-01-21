@@ -157,6 +157,16 @@ public class UpdateEnvSpecificParameters<T extends UpdateParameters> extends Bas
 	}
 
 	@Override
+	public String getConfigurationNames() {
+		return expand(getParameters().getConfigurationNames());
+	}
+
+	@Override
+	public void setConfigurationNames(final String configurationNames) {
+		getParameters().setConfigurationNames(configurationNames);
+	}
+
+	@Override
 	public String toString() {
 		return super.toString() + ", TestRail URL= " + getTestRailUrl() + ", TestRail User= " + getTestRailUser() + ", TimeOut= " + getTimeOut()
 		+ ", Project= " + getProject() + ", Test Path= " + getTestPath() + ", Report Format= " + getReportFormat() + ", Test Run= " + getTestRun()

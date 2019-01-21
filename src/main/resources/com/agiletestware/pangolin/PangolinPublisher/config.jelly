@@ -73,6 +73,10 @@ limitations under the License.
             <f:textarea name="customResultFields" value="${configuration.getCustomResultFields()}"/>
           </f:entry>
           
+          <f:entry title="${%configurationNamesLabel}" field="configurationNames" >            
+            <f:textarea name="configurationNames" value="${configuration.getConfigurationNames()}"/>
+          </f:entry>
+          
           <f:entry title="${%closeRunLabel}" field="closeRun">
 			<f:checkbox name="closeRun" checked="${configuration.isCloseRun()}"/>
 		  </f:entry>

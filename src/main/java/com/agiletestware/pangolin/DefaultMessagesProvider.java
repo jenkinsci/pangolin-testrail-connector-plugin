@@ -142,4 +142,9 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	public String caseNameToIdMap() {
 		return Messages.caseNameToIdMap();
 	}
+
+	@Override
+	public String configurationNames() {
+		return Messages.configurationNames();
+	}
 }

@@ -82,6 +82,7 @@ public final class BulkUpdateParametersFactory {
 		params.setCloseRun(config.isCloseRun());
 		params.setCustomResultFields(config.getCustomResultFields());
 		params.setCaseNameToIdMappings(config.getCaseNameToIdMap());
+		params.setConfigurationNames(config.getConfigurationNames());
 		return params;
 	}
 }

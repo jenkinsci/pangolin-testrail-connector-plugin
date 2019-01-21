@@ -43,6 +43,7 @@ public final class PangolinConfiguration implements Serializable {
 	private boolean closeRun;
 	private String customResultFields;
 	private String caseNameToIdMap;
+	private String configurationNames;
 
 	/**
 	 * Instantiates a new pangolin configuration.
@@ -68,7 +69,8 @@ public final class PangolinConfiguration implements Serializable {
 	 */
 	@DataBoundConstructor
 	public PangolinConfiguration(final String testPath, final String format, final String resultPattern, final String customProperties,
-			final boolean failIfUploadFailed, final String testRun, final String testPlan, final String milestonePath, final boolean closeRun,final String customResultFields) {
+			final boolean failIfUploadFailed, final String testRun, final String testPlan, final String milestonePath, final boolean closeRun,
+			final String customResultFields) {
 		super();
 		this.testPath = Util.fixEmptyAndTrim(testPath);
 		this.format = Util.fixEmptyAndTrim(format);
@@ -278,6 +280,9 @@ public final class PangolinConfiguration implements Serializable {
 		this.customResultFields = customResultFields;
 	}
 
+	/**
+	 * @return case name to ID mappings.
+	 */
 	public String getCaseNameToIdMap() {
 		return caseNameToIdMap;
 	}
@@ -285,6 +290,18 @@ public final class PangolinConfiguration implements Serializable {
 	@DataBoundSetter
 	public void setCaseNameToIdMap(final String caseNameToIdMap) {
 		this.caseNameToIdMap = Util.fixEmptyAndTrim(caseNameToIdMap);
+	}
+
+	/**
+	 * @return configuration names string.
+	 */
+	public String getConfigurationNames() {
+		return configurationNames;
+	}
+
+	@DataBoundSetter
+	public void setConfigurationNames(final String configurationNames) {
+		this.configurationNames = Util.fixEmptyAndTrim(configurationNames);
 	}
 
 }
