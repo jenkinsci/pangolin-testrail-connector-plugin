@@ -34,7 +34,7 @@ import hudson.remoting.Callable;
  *
  * @author Sergey Oplavin.
  */
-public class PangolinRemoteExecutor implements Callable<RunInfo, Exception>, Serializable {
+public class PangolinRemoteExecutor implements Callable<String, Exception>, Serializable {
 
 	private static final long serialVersionUID = -8132991309548833113L;
 	private final JenkinsBuildLogger logger;
@@ -66,8 +66,9 @@ public class PangolinRemoteExecutor implements Callable<RunInfo, Exception>, Ser
 	}
 
 	@Override
-	public RunInfo call() throws Exception {
-		return execute();
+	public String call() throws Exception {
+		final RunInfo runInfo = execute();
+		return runInfo != null ? runInfo.getRunUrl() : null;
 	}
 
 	/**

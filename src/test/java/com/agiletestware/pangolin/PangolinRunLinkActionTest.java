@@ -6,8 +6,6 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.agiletestware.pangolin.shared.model.testresults.UploadResponse.RunInfo;
-
 /**
  * Tests for {@link PangolinRunLinkAction}.
  *
@@ -17,7 +15,7 @@ import com.agiletestware.pangolin.shared.model.testresults.UploadResponse.RunInf
 public class PangolinRunLinkActionTest {
 
 	private static final String URL = "url";
-	private final PangolinRunLinkAction pangolinRunLinkAction = new PangolinRunLinkAction(new RunInfo(1, URL));
+	private final PangolinRunLinkAction pangolinRunLinkAction = new PangolinRunLinkAction(URL);
 
 	@Test
 	public void testGetIconFileName() {
