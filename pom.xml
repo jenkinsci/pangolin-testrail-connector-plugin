@@ -65,7 +65,7 @@
 		<java.level>8</java.level>
 		<mockito.version>2.8.9</mockito.version>
 		<powermock.version>1.7.3</powermock.version>
-		<jackson-databind.version>2.9.8</jackson-databind.version>
+		<jackson-databind.version>2.9.9.2</jackson-databind.version>
 		<pangolin-client.version>2.6</pangolin-client.version>
 	</properties>
 
