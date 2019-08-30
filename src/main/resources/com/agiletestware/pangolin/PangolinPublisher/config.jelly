@@ -89,6 +89,10 @@ limitations under the License.
 		 	<f:entry title="${%caseNameToIdMapLabel}" field="caseNameToIdMap" >            
             	<f:textarea name="caseNameToIdMap" value="${configuration.getCaseNameToIdMap()}"/>
           	</f:entry>
+          	
+          	 <f:entry title="${%disableGrouping}" field="disableGrouping">
+				<f:checkbox name="disableGrouping" checked="${configuration.isDisableGrouping()}"/>
+		  	 </f:entry>
 		 </f:advanced>
 		 
          <f:entry title="">

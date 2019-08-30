@@ -64,7 +64,8 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 
 	@Override
 	public String toString() {
-		return super.toString() + ", Result Pattern=" + getResultPattern() + ", Close Run=" + isCloseRun();
+		return super.toString() + ", Result Pattern=" + getResultPattern() + ", Close Run=" + isCloseRun() + ", Disable Grouping="
+				+ isDisableGrouping();
 	}
 
 	@Override
@@ -75,6 +76,16 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 	@Override
 	public void setCaseNameToIdMappings(final String mappings) {
 		getParameters().setCaseNameToIdMappings(mappings);
+	}
+
+	@Override
+	public boolean isDisableGrouping() {
+		return getParameters().isDisableGrouping();
+	}
+
+	@Override
+	public void setDisableGrouping(final boolean disableGrouping) {
+		getParameters().setDisableGrouping(disableGrouping);
 	}
 
 }

@@ -44,6 +44,7 @@ public final class PangolinConfiguration implements Serializable {
 	private String customResultFields;
 	private String caseNameToIdMap;
 	private String configurationNames;
+	private boolean disableGrouping;
 
 	/**
 	 * Instantiates a new pangolin configuration.
@@ -302,6 +303,15 @@ public final class PangolinConfiguration implements Serializable {
 	@DataBoundSetter
 	public void setConfigurationNames(final String configurationNames) {
 		this.configurationNames = Util.fixEmptyAndTrim(configurationNames);
+	}
+
+	public boolean isDisableGrouping() {
+		return disableGrouping;
+	}
+
+	@DataBoundSetter
+	public void setDisableGrouping(final boolean disableGrouping) {
+		this.disableGrouping = disableGrouping;
 	}
 
 }
