@@ -147,4 +147,9 @@ public enum DefaultMessagesProvider implements MessagesProvider {
 	public String configurationNames() {
 		return Messages.configurationNames();
 	}
+
+	@Override
+	public String disableGrouping() {
+		return Messages.disableGrouping();
+	}
 }
