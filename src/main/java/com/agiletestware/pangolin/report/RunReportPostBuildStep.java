@@ -177,7 +177,7 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 			return PangolinUtility.validateRequiredField(testRailProject);
 		}
 
-		public FormValidation doReportTemplateIds(@QueryParameter final String reportTemplateIds)
+		public FormValidation doCheckReportTemplateIds(@QueryParameter final String reportTemplateIds)
 				throws IOException, ServletException {
 			return PangolinUtility.validateRequiredField(reportTemplateIds);
 		}
