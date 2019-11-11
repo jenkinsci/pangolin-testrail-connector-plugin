@@ -137,9 +137,12 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 			final List<String> resultUrls = new ArrayList<>(configurations.size());
 			for (final RunReportConfiguration config : configurations) {
 				listener.getLogger().println(Messages.runReportStartReport(config.getReportTemplateNameOrId()));
-				resultUrls.add(pangolinClient.runReport(config, connectionConfig).getReportUrl());
+				final String reportUrl = pangolinClient.runReport(config, connectionConfig).getReportUrl();
+				resultUrls.add(reportUrl);
+				listener.getLogger().println(Messages.runReportEndReport(reportUrl));
 			}
 			run.addAction(new RunReportLinkAction(resultUrls));
+			listener.getLogger().println(Messages.runReportFinishLog());
 		} catch (final Exception ex) {
 			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
 			throw new AbortException(Messages.runReportsGeneralError(ex.getMessage() + "\n" + ExceptionUtils.getStackTrace(ex)));
