@@ -55,7 +55,7 @@ public final class BulkUpdateParametersFactory {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static BulkUpdateParameters create(final GlobalConfig globalConfig, final PangolinConfiguration config, final PangolinPublisher publisher,
+	public static BulkUpdateParameters create(final GlobalConfiguration globalConfig, final PangolinConfiguration config, final PangolinPublisher publisher,
 			final PangolinClientFactory pangolinClient, final CustomSecret customSecret) throws Exception {
 		final BulkUpdateParameters params = new BulkUpdateParametersImpl();
 		params.setPangolinUrl(globalConfig.getPangolinUrl());

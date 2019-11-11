@@ -18,6 +18,7 @@ package com.agiletestware.pangolin.validator;
 import org.apache.commons.lang.StringUtils;
 
 import com.agiletestware.pangolin.GlobalConfig;
+import com.agiletestware.pangolin.GlobalConfiguration;
 import com.agiletestware.pangolin.Messages;
 
 /**
@@ -42,7 +43,7 @@ public final class GlobalConfigValidator {
 	 * @throws IllegalStateException
 	 *             exception
 	 */
-	public static void validate(final GlobalConfig globalConfig) {
+	public static void validate(final GlobalConfiguration globalConfig) {
 		final String pangolinUrl = globalConfig.getPangolinUrl();
 		if (StringUtils.isEmpty(pangolinUrl)) {
 			throw new IllegalStateException(Messages.pangolinUrlIsNullCheckSettings());

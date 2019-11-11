@@ -16,7 +16,7 @@
 package com.agiletestware.pangolin;
 
 /**
- * A factory for creating {@link GlobalConfig} objects.
+ * A factory for creating {@link GlobalConfiguration} objects.
  *
  * @author Ayman BEN AMOR
  */
@@ -25,7 +25,7 @@ public interface GlobalConfigFactory {
 	/**
 	 * Creates the.
 	 *
-	 * @return {@link GlobalConfig}
+	 * @return {@link GlobalConfiguration}
 	 */
-	GlobalConfig create();
+	GlobalConfiguration create();
 }

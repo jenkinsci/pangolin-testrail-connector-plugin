@@ -58,7 +58,7 @@ import jenkins.model.Jenkins;
  *
  */
 @Extension
-public class GlobalConfig extends GlobalConfiguration {
+public class GlobalConfig extends GlobalConfiguration implements com.agiletestware.pangolin.GlobalConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger(GlobalConfig.class.getName());
 	private static final Validator<String, Void> TEST_RAIL_USER_VALIDATOR = new StringNotEmptyValidator<>(Messages.testRailUserIsRequired());
@@ -207,6 +207,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 *
 	 * @return the pangolin url
 	 */
+	@Override
 	public String getPangolinUrl() {
 		return pangolinUrl;
 	}
@@ -216,6 +217,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 *
 	 * @return the test rail url
 	 */
+	@Override
 	public String getTestRailUrl() {
 		return testRailUrl;
 	}
@@ -225,6 +227,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 *
 	 * @return the test rail password
 	 */
+	@Override
 	public String getTestRailPassword() {
 		return testRailPassword;
 	}
@@ -234,6 +237,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 *
 	 * @return the upload time out
 	 */
+	@Override
 	public int getUploadTimeOut() {
 		return uploadTimeOut;
 	}
@@ -243,6 +247,7 @@ public class GlobalConfig extends GlobalConfiguration {
 	 *
 	 * @return the test rail user name
 	 */
+	@Override
 	public String getTestRailUserName() {
 		return testRailUserName;
 	}

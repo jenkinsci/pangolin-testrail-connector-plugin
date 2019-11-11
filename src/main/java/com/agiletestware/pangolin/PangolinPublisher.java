@@ -161,7 +161,7 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	private boolean doUpdate(final Run<?, ?> run, final Launcher launcher, final TaskListener listener, final FilePath workspace)
 			throws AbortException {
 		boolean success = true;
-		final GlobalConfig globalConfig = globalConfigFactory.create();
+		final GlobalConfiguration globalConfig = globalConfigFactory.create();
 		GlobalConfigValidator.validate(globalConfig);
 		for (final PangolinConfiguration config : getConfigs()) {
 			try {
@@ -201,7 +201,7 @@ public class PangolinPublisher extends Recorder implements SimpleBuildStep {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void doBulkUpdate(final GlobalConfig globalConfig, final PangolinConfiguration config, final Run<?, ?> run, final FilePath workspace,
+	private void doBulkUpdate(final GlobalConfiguration globalConfig, final PangolinConfiguration config, final Run<?, ?> run, final FilePath workspace,
 			final Launcher launcher, final TaskListener listener)
 					throws Exception {
 		final BulkUpdateParameters params = BulkUpdateParametersFactory.create(globalConfig, config, this, pangolinClient, customSecret);
