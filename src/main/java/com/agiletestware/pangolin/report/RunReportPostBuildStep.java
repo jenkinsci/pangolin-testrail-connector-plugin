@@ -106,11 +106,7 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 	@DataBoundSetter
 	public void setTestRailPassword(final String testRailPassword) {
 		final String password = Util.fixEmptyAndTrim(testRailPassword);
-		if (password == null) {
-			this.testRailPassword = password;
-		} else {
-			this.testRailPassword = customSecret.getEncryptedValue(testRailPassword);
-		}
+		this.testRailPassword = password != null ? customSecret.getEncryptedValue(password) : null;
 	}
 
 	public String getReportTemplateIds() {
