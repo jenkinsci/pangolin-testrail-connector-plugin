@@ -63,6 +63,9 @@ public enum DefaultRunReportConfigurationFactory implements RunReportConfigurati
 		if (StringUtils.isEmpty(taskPassword)) {
 			return globalPassword;
 		}
+		if (secret == null) {
+			return taskPassword;
+		}
 		final String plain = secret.getPlainText(taskPassword);
 		return client.getEncryptedPassword(plain,
 				new ConnectionConfig(globalConfig.getPangolinUrl(), TimeUnit.MINUTES.toMillis(globalConfig.getUploadTimeOut())));

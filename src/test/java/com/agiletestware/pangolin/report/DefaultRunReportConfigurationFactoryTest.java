@@ -118,6 +118,37 @@ public class DefaultRunReportConfigurationFactoryTest {
 		verify(client).getEncryptedPassword(overriddenPwd, new ConnectionConfig(pangolinUrl, TimeUnit.MINUTES.toMillis(timeout)));
 	}
 
+	@Test
+	public void createWithUserPasswordFromStep_nullSecret() throws Exception {
+		final StupidGlobalConfiguration globalConfig = new StupidGlobalConfiguration();
+		final String pangolinUrl = "pangolinUrl";
+		final String testRailUrl = "trUrl";
+		final String testRailUserName = "user";
+		final String testRailPassword = "pwd";
+		final String testRailProject = "project";
+		final String reportTemplateIds = "r1\nr2";
+		final int timeout = 42;
+
+		globalConfig.setPangolinUrl(pangolinUrl);
+		globalConfig.setTestRailUrl(testRailUrl);
+		globalConfig.setTestRailUserName(testRailUserName);
+		globalConfig.setTestRailPassword(testRailPassword);
+		globalConfig.setUploadTimeOut(timeout);
+		final RunReportPostBuildStep buildStep = new RunReportPostBuildStep(mock(GlobalConfigFactory.class), mock(PangolinClientFactory.class), null,
+				mock(RunReportConfigurationFactory.class));
+		buildStep.setTestRailProject(testRailProject);
+		buildStep.setReportTemplateIds(reportTemplateIds);
+		final String overriddenName = "overridenUser";
+		final String overriddenPwd = "overridenPassword";
+		buildStep.setTestRailUserName(overriddenName);
+		buildStep.setTestRailPassword(overriddenPwd);
+
+		final List<RunReportConfiguration> configs = factory.create(globalConfig, buildStep, client, null);
+		assertEquals(Arrays.asList(createConfig(testRailUrl, overriddenName, overriddenPwd, testRailProject, "r1"),
+				createConfig(testRailUrl, overriddenName, overriddenPwd, testRailProject, "r2")), configs);
+		verifyNoMoreInteractions(secret, client);
+	}
+
 	private RunReportConfiguration createConfig(final String url, final String user, final String password, final String project,
 			final String reportTemplateNameOrId) {
 		final RunReportConfiguration expectedConfig = new RunReportConfiguration();

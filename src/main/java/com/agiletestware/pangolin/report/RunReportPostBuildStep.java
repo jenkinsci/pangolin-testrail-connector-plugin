@@ -15,6 +15,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
 
 import com.agiletestware.pangolin.DefaultGlobalConfigFactory;
 import com.agiletestware.pangolin.GlobalConfigFactory;
@@ -45,6 +46,7 @@ import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
 import jenkins.tasks.SimpleBuildStep;
+import net.sf.json.JSONObject;
 
 /**
  * Post-build action to run a report in TestRail.
@@ -58,7 +60,7 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 
 	private final GlobalConfigFactory globalConfigFactory;
 	private final PangolinClientFactory pangolinClientFactory;
-	private final CustomSecret customSecret;
+	private CustomSecret customSecret;
 	private final RunReportConfigurationFactory reportConfigFactory;
 
 	private String testRailProject;
@@ -68,7 +70,7 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 
 	@DataBoundConstructor
 	public RunReportPostBuildStep() {
-		this(DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE, DefaultCustomSecret.THE_INSTANCE,
+		this(DefaultGlobalConfigFactory.THE_INSTANCE, DefaultPangolinClientFactory.THE_INSTANCE, null,
 				DefaultRunReportConfigurationFactory.THE_INSTANCE);
 	}
 
@@ -77,7 +79,7 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 		super();
 		this.globalConfigFactory = Objects.requireNonNull(globalConfigFactory, "globalConfigFactory is null");
 		this.pangolinClientFactory = Objects.requireNonNull(pangolinClientFactory, "pangolinClientFactory is null");
-		this.customSecret = Objects.requireNonNull(customSecret, "customSecret is null");
+		this.customSecret = customSecret;
 		this.reportConfigFactory = Objects.requireNonNull(reportConfigFactory, "reportConfigFactory is null");
 	}
 
@@ -106,7 +108,11 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 	@DataBoundSetter
 	public void setTestRailPassword(final String testRailPassword) {
 		final String password = Util.fixEmptyAndTrim(testRailPassword);
-		this.testRailPassword = password != null ? customSecret.getEncryptedValue(password) : null;
+		if (customSecret != null) {
+			this.testRailPassword = password != null ? customSecret.getEncryptedValue(password) : null;
+		} else {
+			this.testRailPassword = testRailPassword;
+		}
 	}
 
 	public String getReportTemplateIds() {
@@ -169,6 +175,13 @@ public class RunReportPostBuildStep extends Notifier implements SimpleBuildStep 
 		@Override
 		public String getDisplayName() {
 			return Messages.runReportDisplayName();
+		}
+
+		@Override
+		public RunReportPostBuildStep newInstance(final StaplerRequest req, final JSONObject formData) throws FormException {
+			final RunReportPostBuildStep step = (RunReportPostBuildStep) super.newInstance(req, formData);
+			step.customSecret = DefaultCustomSecret.THE_INSTANCE;
+			return step;
 		}
 
 		public FormValidation doCheckTestRailProject(@QueryParameter final String testRailProject)

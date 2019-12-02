@@ -127,6 +127,14 @@ public class RunReportPostBuildStepTest {
 	}
 
 	@Test
+	public void setPassword_defaultConstructor() {
+		final String plainPwd = "plain";
+		final RunReportPostBuildStep step = new RunReportPostBuildStep();
+		step.setTestRailPassword(plainPwd);
+		assertEquals(plainPwd, step.getTestRailPassword());
+	}
+
+	@Test
 	public void setPassword_nullPassword() {
 		final RunReportPostBuildStep step = new RunReportPostBuildStep(globalConfigFactory, pangolinClientFactory, secret, reportConfigFactory);
 		step.setTestRailPassword(null);
@@ -144,12 +152,6 @@ public class RunReportPostBuildStepTest {
 	public void create_nullPangolinGlobalFactory_error() {
 		expected.expect(NullPointerException.class);
 		new RunReportPostBuildStep(globalConfigFactory, null, secret, reportConfigFactory);
-	}
-
-	@Test
-	public void create_nullSecret_error() {
-		expected.expect(NullPointerException.class);
-		new RunReportPostBuildStep(globalConfigFactory, pangolinClientFactory, null, reportConfigFactory);
 	}
 
 	@Test
