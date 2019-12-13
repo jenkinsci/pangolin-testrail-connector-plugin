@@ -66,7 +66,7 @@
 		<mockito.version>2.8.9</mockito.version>
 		<powermock.version>1.7.3</powermock.version>
 		<jackson-databind.version>2.9.10.1</jackson-databind.version>
-		<pangolin-client.version>3.0</pangolin-client.version>
+		<pangolin-client.version>3.1-SNAPSHOT</pangolin-client.version>
 	</properties>
 
 	<dependencies>
@@ -164,24 +164,8 @@
 			<url>https://repo.jenkins-ci.org/public/</url>
 		</repository>
 		<repository>
-			<id>public.maven.agiletestware.com</id>
-			<url>http://public.maven.agiletestware.com.s3-website-us-west-2.amazonaws.com/release</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>snapshot.public.maven.agiletestware.com</id>
-			<url>http://public.maven.agiletestware.com.s3-website-us-west-2.amazonaws.com/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>nexus.agiletestware.com</id>
+			<url>https://nexus.agiletestware.com/repository/maven-public/</url>
 		</repository>
 	</repositories>
 
