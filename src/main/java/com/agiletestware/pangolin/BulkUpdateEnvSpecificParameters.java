@@ -26,7 +26,7 @@ import hudson.EnvVars;
  * @author Sergey Oplavin
  *
  */
-public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters<BulkUpdateParameters> implements BulkUpdateParameters {
+public class BulkUpdateEnvSpecificParameters extends BaseEnvSpecificParameters<BulkUpdateParameters> implements BulkUpdateParameters {
 
 	private static final long serialVersionUID = -4809299646198234084L;
 
@@ -40,6 +40,136 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 	 */
 	public BulkUpdateEnvSpecificParameters(final BulkUpdateParameters params, final EnvVars envVars) {
 		super(params, envVars);
+	}
+
+	@Override
+	public String getCustomFields() {
+		return expand(getParameters().getCustomFields());
+	}
+
+	@Override
+	public String getProject() {
+		return expand(getParameters().getProject());
+	}
+
+	@Override
+	public String getReportFormat() {
+		return getParameters().getReportFormat();
+	}
+
+	@Override
+	public String getTestPath() {
+		return expand(getParameters().getTestPath());
+	}
+
+	@Override
+	public String getTestRailEncryptedPassword() {
+		return getParameters().getTestRailEncryptedPassword();
+	}
+
+	@Override
+	public String getTestRailUrl() {
+		return expand(getParameters().getTestRailUrl());
+	}
+
+	@Override
+	public String getTestRailUser() {
+		return expand(getParameters().getTestRailUser());
+	}
+
+	@Override
+	public int getTimeOut() {
+		return getParameters().getTimeOut();
+	}
+
+	@Override
+	public void setCustomFields(final String customFields) {
+		getParameters().setCustomFields(customFields);
+	}
+
+	@Override
+	public void setProject(final String project) {
+		getParameters().setProject(project);
+	}
+
+	@Override
+	public void setReportFormat(final String reportFormat) {
+		getParameters().setReportFormat(reportFormat);
+	}
+
+	@Override
+	public void setTestPath(final String testPath) {
+		getParameters().setTestPath(testPath);
+	}
+
+	@Override
+	public void setTestRailEncryptedPassword(final String password) {
+		getParameters().setTestRailEncryptedPassword(password);
+	}
+
+	@Override
+	public void setTestRailUrl(final String url) {
+		getParameters().setTestRailUrl(url);
+	}
+
+	@Override
+	public void setTestRailUser(final String user) {
+		getParameters().setTestRailUser(user);
+	}
+
+	@Override
+	public void setTimeOut(final int timeout) {
+		getParameters().setTimeOut(timeout);
+	}
+
+	@Override
+	public String getMilestonePath() {
+		return expand(getParameters().getMilestonePath());
+	}
+
+	@Override
+	public String getTestPlan() {
+		return expand(getParameters().getTestPlan());
+	}
+
+	@Override
+	public String getTestRun() {
+		return expand(getParameters().getTestRun());
+	}
+
+	@Override
+	public void setMilestonePath(final String milestonePath) {
+		getParameters().setMilestonePath(milestonePath);
+	}
+
+	@Override
+	public void setTestPlan(final String testPlan) {
+		getParameters().setTestPlan(testPlan);
+	}
+
+	@Override
+	public void setTestRun(final String testRun) {
+		getParameters().setTestRun(testRun);
+	}
+
+	@Override
+	public String getCustomResultFields() {
+		return expand(getParameters().getCustomResultFields());
+	}
+
+	@Override
+	public void setCustomResultFields(final String customResultFields) {
+		getParameters().setCustomResultFields(customResultFields);
+	}
+
+	@Override
+	public String getConfigurationNames() {
+		return expand(getParameters().getConfigurationNames());
+	}
+
+	@Override
+	public void setConfigurationNames(final String configurationNames) {
+		getParameters().setConfigurationNames(configurationNames);
 	}
 
 	@Override
@@ -63,12 +193,6 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 	}
 
 	@Override
-	public String toString() {
-		return super.toString() + ", Result Pattern=" + getResultPattern() + ", Close Run=" + isCloseRun() + ", Disable Grouping="
-				+ isDisableGrouping();
-	}
-
-	@Override
 	public String getCaseNameToIdMappings() {
 		return expand(getParameters().getCaseNameToIdMappings());
 	}
@@ -87,5 +211,26 @@ public class BulkUpdateEnvSpecificParameters extends UpdateEnvSpecificParameters
 	public void setDisableGrouping(final boolean disableGrouping) {
 		getParameters().setDisableGrouping(disableGrouping);
 	}
+
+	@Override
+	public int getTestRunId() {
+		return getParameters().getTestRunId();
+	}
+
+	@Override
+	public void setTestRunId(final int testRunId) {
+		getParameters().setTestRunId(testRunId);
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ", TestRail URL= " + getTestRailUrl() + ", TestRail User= " + getTestRailUser() + ", TimeOut= " + getTimeOut()
+		+ ", Project= " + getProject() + ", Test Path= " + getTestPath() + ", Report Format= " + getReportFormat() + ", Test Run= " + getTestRun()
+		+ ", Test Plan= " + getTestPlan() + ", Milestone Path= " + getMilestonePath() + ", Custom Fields= " + getCustomFields()
+		+ ", Custom Result Fields= " + getCustomResultFields() + ", Result Pattern=" + getResultPattern() + ", Close Run=" + isCloseRun()
+		+ ", Disable Grouping="
+		+ isDisableGrouping();
+	}
+
 
 }

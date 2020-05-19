@@ -15,8 +15,7 @@
  */
 package com.agiletestware.pangolin;
 
-import com.agiletestware.pangolin.client.upload.BaseParameters;
-import com.agiletestware.pangolin.shared.model.testresults.PangolinParameters;
+import com.agiletestware.pangolin.client.upload.PangolinParameters;
 
 import hudson.EnvVars;
 
@@ -27,7 +26,7 @@ import hudson.EnvVars;
  * @author Sergey Oplavin
  *
  */
-public class BaseEnvSpecificParameters<T extends BaseParameters> implements BaseParameters {
+public class BaseEnvSpecificParameters<T extends PangolinParameters> implements PangolinParameters {
 
 	/** . */
 	private static final long serialVersionUID = 6382631041923000822L;
@@ -62,8 +61,41 @@ public class BaseEnvSpecificParameters<T extends BaseParameters> implements Base
 	}
 
 	@Override
+	public String getTestRailEncryptedPassword() {
+		return params.getTestRailEncryptedPassword();
+	}
+
+	@Override
+	public String getTestRailUrl() {
+		return expand(params.getTestRailUrl());
+	}
+
+	@Override
+	public String getTestRailUser() {
+		return expand(params.getTestRailUser());
+	}
+
+	@Override
+	public void setTestRailEncryptedPassword(final String arg0) {
+		params.setTestRailEncryptedPassword(arg0);
+	}
+
+	@Override
+	public void setTestRailUrl(final String arg0) {
+		params.setTestRailUrl(arg0);
+	}
+
+	@Override
+	public void setTestRailUser(final String arg0) {
+		params.setTestRailUser(arg0);
+	}
+
+	@Override
 	public String toString() {
-		return "Parameters: Pangolin URL: " + getPangolinUrl();
+		return "PangolinParameters PangolinURL: " + getPangolinUrl()
+		+ ", TestRail URL: " + getTestRailUrl()
+		+ ", TestRail User: " + getTestRailUser()
+		+ ", TestRail password: *******";
 	}
 
 }

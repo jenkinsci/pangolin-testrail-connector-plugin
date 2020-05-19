@@ -65,7 +65,7 @@ public final class BulkUpdateParametersFactory {
 					.getEncryptedPassword(customSecret.getPlainText(testRailPassword), new ConnectionConfig(globalConfig.getPangolinUrl(),
 							TimeUnit.MILLISECONDS.convert(globalConfig.getUploadTimeOut(), TimeUnit.MINUTES)));
 		}
-		params.setTestRailPassword(
+		params.setTestRailEncryptedPassword(
 				StringUtils.isNotEmpty(testRailPassword) ? testRailPassword : globalConfig.getTestRailPassword());
 		final String commonTestRailUserName = publisher.getTestRailUserName();
 		params.setTestRailUser(StringUtils.isNotEmpty(commonTestRailUserName) ? commonTestRailUserName : globalConfig.getTestRailUserName());

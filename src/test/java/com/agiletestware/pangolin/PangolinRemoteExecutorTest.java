@@ -42,10 +42,8 @@ import com.agiletestware.pangolin.client.PangolinClient;
 import com.agiletestware.pangolin.client.PangolinClientFactory;
 import com.agiletestware.pangolin.client.upload.BulkUpdateParameters;
 import com.agiletestware.pangolin.client.upload.BulkUpdateParametersImpl;
-import com.agiletestware.pangolin.client.upload.UploadTestReportParameters;
 import com.agiletestware.pangolin.shared.model.testresults.UploadResponse;
 import com.agiletestware.pangolin.shared.model.testresults.UploadResponse.RunInfo;
-import com.agiletestware.pangolin.shared.model.testresults.UploadResultsParameters;
 
 import hudson.FilePath;
 import hudson.model.TaskListener;
@@ -81,19 +79,16 @@ public class PangolinRemoteExecutorTest {
 		final int runId = 42;
 		final PangolinClientFactory clientFactory = mock(PangolinClientFactory.class);
 		final PangolinClient client = mock(PangolinClient.class);
-		when(client.sendResultsToTestrail(any(), any())).thenReturn(new UploadResponse(Arrays.asList(new RunInfo(runId, "url"))));
+		when(client.sendResultsToTestrail(any(), any(), any())).thenReturn(new UploadResponse(Arrays.asList(new RunInfo(runId, "url"))));
 		when(clientFactory.create(any())).thenReturn(client);
 		final BulkUpdateParameters params = createBulkUpdateParametersImpl();
 		params.setResultPattern("**/*.xml");
 		final File file1 = tempFolder.newFile("report1.xml");
 		final File file2 = tempFolder.newFile("report2.xml");
-		final UploadResultsParameters expected1 = new UploadTestReportParameters(params, file1);
-		final UploadResultsParameters expected2 = new UploadTestReportParameters(params, file2);
-		expected2.setTestRunId(runId);
 		final RunInfo runInfo = new PangolinRemoteExecutor(new FilePath(tempFolder.getRoot()), params, listener, clientFactory).execute();
 		assertEquals("url", runInfo.getRunUrl());
-		verify(client).sendResultsToTestrail(eq(expected1), any());
-		verify(client).sendResultsToTestrail(eq(expected2), any());
+		verify(client).sendResultsToTestrail(eq(params), eq(Arrays.asList(file1)), any());
+		verify(client).sendResultsToTestrail(eq(params), eq(Arrays.asList(file2)), any());
 		verify(log, times(2)).println("Results have been added to run: url");
 	}
 
@@ -113,7 +108,7 @@ public class PangolinRemoteExecutorTest {
 		params.setPangolinUrl("http://localhost:9090");
 		params.setProject("Pangolin");
 		params.setTestRailUser("user");
-		params.setTestRailPassword("pasword");
+		params.setTestRailEncryptedPassword("pasword");
 		params.setTestRailUrl("https://testrail.agiletestware.com");
 		params.setTestPath("testPath");
 		params.setTimeOut(0);

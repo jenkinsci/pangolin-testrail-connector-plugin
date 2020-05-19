@@ -142,7 +142,7 @@ public class BulkUpdateParametersFactoryTest {
 		assertEquals(PANGOLIN_URL, params.getPangolinUrl());
 		assertEquals(TEST_RAIL_URL, params.getTestRailUrl());
 		assertEquals(expectedUserName, params.getTestRailUser());
-		assertEquals(expectedPassword, params.getTestRailPassword());
+		assertEquals(expectedPassword, params.getTestRailEncryptedPassword());
 		assertEquals(TIMEOUT, params.getTimeOut());
 		assertEquals(TEST_RAIL_PROJECT, params.getProject());
 		assertEquals(TEST_PATH, params.getTestPath());
