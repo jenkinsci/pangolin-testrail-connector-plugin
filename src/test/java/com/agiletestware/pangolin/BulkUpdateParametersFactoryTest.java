@@ -163,7 +163,7 @@ public class BulkUpdateParametersFactoryTest {
 		when(globalConfig.getPangolinUrl()).thenReturn(PANGOLIN_URL);
 		when(globalConfig.getTestRailUrl()).thenReturn(TEST_RAIL_URL);
 		when(globalConfig.getTestRailUserName()).thenReturn(TEST_RAIL_USERNAME);
-		when(globalConfig.getTestRailPassword()).thenReturn(TEST_RAIL_PASSWORD);
+		when(globalConfig.getTestRailPasswordPlain()).thenReturn(TEST_RAIL_PASSWORD);
 		when(globalConfig.getUploadTimeOut()).thenReturn(TIMEOUT);
 		return globalConfig;
 	}

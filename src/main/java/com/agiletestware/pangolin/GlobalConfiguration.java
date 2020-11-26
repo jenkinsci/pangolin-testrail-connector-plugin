@@ -26,7 +26,7 @@ public interface GlobalConfiguration {
 	/**
 	 * @return TestRail user encrypted password.
 	 */
-	String getTestRailPassword();
+	String getTestRailPasswordPlain();
 
 	/**
 	 * @return upload timeout in minutes.

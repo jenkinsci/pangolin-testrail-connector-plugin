@@ -79,7 +79,7 @@ public class RunReportPostBuildStepTest {
 
 		step.perform(run, new FilePath(tempFolder.newFile()), launcher, listener);
 
-		verify(pangolinClient).runReport(createConfig(globalConfig.getTestRailUrl(), globalConfig.getTestRailUserName(), globalConfig.getTestRailPassword(),
+		verify(pangolinClient).runReport(createConfig(globalConfig.getTestRailUrl(), globalConfig.getTestRailUserName(), globalConfig.getTestRailPasswordPlain(),
 				step.getTestRailProject(), "r1"),
 				new ConnectionConfig(globalConfig.getPangolinUrl(), TimeUnit.MINUTES.toMillis(globalConfig.getUploadTimeOut())));
 		final ArgumentCaptor<RunReportLinkAction> runReportLinkCaptor = ArgumentCaptor.forClass(RunReportLinkAction.class);

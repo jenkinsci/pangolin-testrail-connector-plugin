@@ -26,7 +26,7 @@ public class StupidGlobalConfiguration implements GlobalConfiguration {
 	}
 
 	@Override
-	public String getTestRailPassword() {
+	public String getTestRailPasswordPlain() {
 		return testRailPassword;
 	}
 

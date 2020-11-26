@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.verb.POST;
@@ -47,6 +47,7 @@ import com.agiletestware.pangolin.validator.Validator;
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.util.FormValidation;
+import hudson.util.Secret;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.Jenkins;
 
@@ -70,7 +71,7 @@ public class GlobalConfig extends GlobalConfiguration implements com.agiletestwa
 	private String pangolinUrl;
 	private String testRailUrl;
 	private String testRailUserName;
-	private String testRailPassword;
+	private Secret testRailPassword;
 	private int uploadTimeOut;
 	private transient PangolinClientFactory clientFactory;
 	private transient CustomUrlAvailableValidator pangolinUrlValidator;
@@ -107,34 +108,30 @@ public class GlobalConfig extends GlobalConfiguration implements com.agiletestwa
 			@QueryParameter("pangolinUrl") final String pangolinUrl,
 			@QueryParameter("testRailUrl") final String testRailUrl,
 			@QueryParameter("testRailUserName") final String testRailUserName,
-			@QueryParameter("testRailPassword") final String testRailPassword,
+			@QueryParameter("testRailPassword") final Secret testRailPassword,
 			@QueryParameter("uploadTimeOut") final int uploadTimeOut) {
 		Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
 		final String pangolinURLTrimmed = fixEmptyAndTrim(pangolinUrl);
 		final String testRailURLTrimmed = fixEmptyAndTrim(testRailUrl);
 		final String testRailUserNameTrimmed = fixEmptyAndTrim(testRailUserName);
 		try {
+			final String plainPassword = testRailPassword != null ? testRailPassword.getPlainText() : null;
 			final Long uploadTimeOutAsMillis = TimeUnit.MILLISECONDS.convert(uploadTimeOut, TimeUnit.MINUTES);
 			final FormValidation validation = FormValidation.aggregate(Arrays.asList(
 					pangolinUrlValidator.validate(pangolinURLTrimmed, uploadTimeOutAsMillis),
 					testRailUrlValidator.validate(testRailURLTrimmed, uploadTimeOutAsMillis),
 					TEST_RAIL_USER_VALIDATOR.validate(testRailUserNameTrimmed, null),
-					TEST_RAIL_PASSWORD_VALIDATOR.validate(testRailPassword, null),
+					TEST_RAIL_PASSWORD_VALIDATOR.validate(plainPassword, null),
 					UploadTimeOutValidator.THE_INSTANCE.validate(uploadTimeOut)));
 			if (FormValidation.Kind.ERROR == validation.kind) {
 				return validation;
 			}
+			setPassword(testRailPassword, pangolinURLTrimmed, uploadTimeOut);
 			this.pangolinUrl = pangolinUrl;
 			this.testRailUrl = testRailUrl;
 			this.testRailUserName = testRailUserName;
 			this.uploadTimeOut = uploadTimeOut;
 
-			// Set final password only if old value is null/empty/final blank OR
-			// if new value final is not equal final to old
-			if (StringUtils.isEmpty(this.testRailPassword) || !this.testRailPassword.equals(testRailPassword)) {
-				this.testRailPassword = clientFactory.create(DefaultRetrofitFactory.THE_INSTANCE).getEncryptedPassword(testRailPassword,
-						new ConnectionConfig(this.pangolinUrl, TimeUnit.MILLISECONDS.convert(this.uploadTimeOut, TimeUnit.MINUTES)));
-			}
 			save();
 		} catch (final Exception e) {
 			LOGGER.log(Level.SEVERE, "Error when trying to save configuration", e);
@@ -222,14 +219,18 @@ public class GlobalConfig extends GlobalConfiguration implements com.agiletestwa
 		return testRailUrl;
 	}
 
+	public Secret getTestRailPassword() {
+		return testRailPassword;
+	}
+
 	/**
 	 * Gets the test rail password.
 	 *
 	 * @return the test rail password
 	 */
 	@Override
-	public String getTestRailPassword() {
-		return testRailPassword;
+	public String getTestRailPasswordPlain() {
+		return testRailPassword != null ? testRailPassword.getPlainText() : null;
 	}
 
 	/**
@@ -280,5 +281,15 @@ public class GlobalConfig extends GlobalConfiguration implements com.agiletestwa
 	 */
 	void setClientFactory(final PangolinClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
+	}
+
+	private void setPassword(final Secret newPassword, final String pangolinUrl, final int timeOutMinutes) throws Exception {
+		if (ObjectUtils.equals(this.testRailPassword, newPassword)) {
+			return;
+		}
+		this.testRailPassword = Secret
+				.fromString(clientFactory.create(DefaultRetrofitFactory.THE_INSTANCE).getEncryptedPassword(newPassword.getPlainText(),
+						new ConnectionConfig(pangolinUrl, TimeUnit.MILLISECONDS.convert(timeOutMinutes, TimeUnit.MINUTES))));
+
 	}
 }

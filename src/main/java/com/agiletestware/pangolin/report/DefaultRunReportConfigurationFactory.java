@@ -41,7 +41,7 @@ public enum DefaultRunReportConfigurationFactory implements RunReportConfigurati
 		if (StringUtils.isEmpty(user)) {
 			user = globalConfig.getTestRailUserName();
 		}
-		final String password = getPassword(buildStep.getTestRailPassword(), globalConfig.getTestRailPassword(), secret, globalConfig, client);
+		final String password = getPassword(buildStep.getTestRailPassword(), globalConfig.getTestRailPasswordPlain(), secret, globalConfig, client);
 
 		final String[] templateIds = reportTemplateIds.split("\n");
 		final List<RunReportConfiguration> configs = new ArrayList<>(templateIds.length);
