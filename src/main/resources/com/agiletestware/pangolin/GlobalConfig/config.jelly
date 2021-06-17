@@ -41,13 +41,6 @@ limitations under the License.
          <f:entry title="${%uploadTimeOutLabel}" field="uploadTimeOut">
             <f:number name="uploadTimeOut" default="0" clazz="required" checkMessage="{%validIntegerMsg}" />
           </f:entry>
-          
-          <f:validateButton
-            disabled="True" 
-            title="${%saveConfigurationLabel}"
-            progress="${%saveConfigurationLabel}"
-            method="saveConnection"
-            with="pangolinUrl,testRailUrl,testRailUserName,testRailPassword,uploadTimeOut" />
-         
+                  
     </f:section>
 </j:jelly>
