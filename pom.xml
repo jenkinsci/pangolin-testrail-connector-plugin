@@ -25,7 +25,7 @@
 
 	<name>Agiletestware Pangolin Connector for TestRail</name>
 	<description>Integrates Jenkins with TestRail by automatically publishing test results from Jenkins to TestRail using Pangolin server (http://www.agiletestware.com)</description>
-	<url>https://wiki.jenkins.io/display/JENKINS/Pangolin+TestRail+Connector</url>
+	<url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 	<inceptionYear>2018</inceptionYear>
 	
 	<organization>
