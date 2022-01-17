@@ -18,14 +18,9 @@ package com.agiletestware.pangolin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -44,13 +39,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.agiletestware.pangolin.client.PangolinClient;
-import com.agiletestware.pangolin.client.PangolinClientFactory;
 import com.agiletestware.pangolin.validator.CustomUrlAvailableValidator;
 
 import hudson.model.AbstractProject;
 import hudson.security.ACL;
-import hudson.security.AccessDeniedException2;
 import hudson.security.Permission;
 import hudson.util.FormValidation;
 import hudson.util.Secret;
@@ -102,121 +94,8 @@ public class GlobalConfigTest {
 	}
 
 	@Test
-	public void doSaveConnectionPassTest() throws Exception {
-		final PangolinClient client = mock(PangolinClient.class);
-		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenReturn(ENCRYPTED_PASSWORD);
-		final PangolinClientFactory clientFactory = (c) -> client;
-
-		globalConfig.setPangolinUrlValidator(alwaysValidValidator);
-		globalConfig.setTestRailUrlValidator(alwaysValidValidator);
-		globalConfig.setClientFactory(clientFactory);
-
-		assertNullValues();
-
-		final FormValidation formValidation = globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, PASSWORD_SECRET, TIME_OUT);
-		assertEquals(FormValidation.Kind.OK, formValidation.kind);
-		assertEquals("Configuration Saved", formValidation.getMessage());
-		verify(globalConfig).save();
-		assertEquals(PANGOLIN_URL, globalConfig.getPangolinUrl());
-		assertEquals(TEST_RAIL_URL, globalConfig.getTestRailUrl());
-		assertEquals(TEST_RAIL_USER, globalConfig.getTestRailUserName());
-		assertEquals(ENCRYPTED_SECRET, globalConfig.getTestRailPassword());
-		assertEquals(TIME_OUT, globalConfig.getUploadTimeOut());
-	}
-
-	@Test
-	public void doSaveConnectionFailDuringSaveTest() throws Exception {
-		final PangolinClient client = mock(PangolinClient.class);
-		final Exception expected = new Exception("Oops");
-		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenThrow(expected);
-		final PangolinClientFactory clientFactory = (c) -> client;
-
-		globalConfig.setPangolinUrlValidator(alwaysValidValidator);
-		globalConfig.setTestRailUrlValidator(alwaysValidValidator);
-		globalConfig.setClientFactory(clientFactory);
-
-		final FormValidation formValidation = globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, PASSWORD_SECRET, TIME_OUT);
-		assertEquals(FormValidation.Kind.ERROR, formValidation.kind);
-		assertEquals("ERROR: Error when trying to save configuration: " + expected.getMessage(), formValidation.toString());
-		verify(globalConfig, never()).save();
-	}
-
-	@Test
-	public void doSaveConnectionOnEmptyPangolinUrl() {
-		globalConfig.setTestRailUrlValidator(alwaysValidValidator);
-		final FormValidation formValidation = globalConfig.doSaveConnection(" ", TEST_RAIL_URL, TEST_RAIL_USER, PASSWORD_SECRET, 0);
-		assertEquals(FormValidation.Kind.ERROR, formValidation.kind);
-		assertEquals(
-				"ERROR: <ul style='list-style-type: none; padding-left: 0; margin: 0'><li>Pangolin URL is required</li><li><div/></li><li><div/></li><li><div/></li><li><div/></li></ul>",
-				formValidation.toString());
-		verify(globalConfig, never()).save();
-		assertNullValues();
-	}
-
-	@Test
-	public void doSaveConnectionOnEmptyTestRailUrl() {
-		globalConfig.setPangolinUrlValidator(alwaysValidValidator);
-		final FormValidation formValidation = globalConfig.doSaveConnection(PANGOLIN_URL, " ", TEST_RAIL_USER, PASSWORD_SECRET, 0);
-		assertEquals(FormValidation.Kind.ERROR, formValidation.kind);
-		assertEquals(
-				"ERROR: <ul style='list-style-type: none; padding-left: 0; margin: 0'><li><div/></li><li>TestRail URL is required</li><li><div/></li><li><div/></li><li><div/></li></ul>",
-				formValidation.toString());
-		verify(globalConfig, never()).save();
-		assertNullValues();
-	}
-
-	@Test
-	public void doSaveConnectionOnEmptyTestRailUser() {
-		globalConfig.setPangolinUrlValidator(alwaysValidValidator);
-		globalConfig.setTestRailUrlValidator(alwaysValidValidator);
-		final FormValidation formValidation = globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, " ", PASSWORD_SECRET, TIME_OUT);
-		assertEquals(FormValidation.Kind.ERROR, formValidation.kind);
-		assertEquals(
-				"ERROR: <ul style='list-style-type: none; padding-left: 0; margin: 0'><li><div/></li><li><div/></li><li>TestRail User is required</li><li><div/></li><li><div/></li></ul>",
-				formValidation.toString());
-		verify(globalConfig, never()).save();
-		assertNullValues();
-	}
-
-	@Test
-	public void doSaveConnectionWithDifferentPasswordValues() throws Exception {
-		final PangolinClient client = mock(PangolinClient.class);
-		when(client.getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any())).thenReturn(ENCRYPTED_PASSWORD);
-		final PangolinClientFactory clientFactory = (c) -> client;
-
-		globalConfig.setPangolinUrlValidator(alwaysValidValidator);
-		globalConfig.setTestRailUrlValidator(alwaysValidValidator);
-		globalConfig.setClientFactory(clientFactory);
-		assertNullValues();
-
-		globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, PASSWORD_SECRET, TIME_OUT);
-		verify(globalConfig).save();
-		verify(client).getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any());
-
-		// try different value
-		globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, PASSWORD_SECRET, TIME_OUT);
-		verify(client, times(2)).getEncryptedPassword(eq(TEST_RAIL_PASSWORD), any());
-
-		// try the same value
-		globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, ENCRYPTED_SECRET, TIME_OUT);
-		verifyNoMoreInteractions(client);
-	}
-
-	@Test
-	public void doSaveConnectionFailOnMissingPrivileges() {
-		expected.expect(AccessDeniedException2.class);
-		when(jenkins.getACL()).thenReturn(new ACL() {
-
-			@Override
-			public boolean hasPermission(final Authentication a, final Permission permission) {
-				return false;
-			}
-		});
-		globalConfig.doSaveConnection(PANGOLIN_URL, TEST_RAIL_URL, TEST_RAIL_USER, PASSWORD_SECRET, TIME_OUT);
-	}
-
-	@Test
 	public void doCheckPassPangolinURL() throws IOException, ServletException {
+		globalConfig.setPangolinUrlValidator(alwaysValidValidator);
 		final List<String> urls = Arrays.asList("http://localhost:9090", "https://localhost:9090", "  https://localhost:9090  ");
 		for (final String url : urls) {
 			assertEquals("Does not match for URL value: <" + url + ">", FormValidation.ok(),
@@ -239,6 +118,7 @@ public class GlobalConfigTest {
 
 	@Test
 	public void doCheckPassTestRailURL() throws IOException, ServletException {
+		globalConfig.setTestRailUrlValidator(alwaysValidValidator);
 		final List<String> urls = Arrays.asList("https://localhost:8908", "http://localhost:8908", "https://localhost", "http://localhost",
 				"  http://localhost:8908  ");
 		for (final String url : urls) {
