@@ -1,5 +1,8 @@
 Agiletestware Pangolin Connector for TestRail
 =============================================
+[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/pangolin-testrail-connector.svg)](https://plugins.jenkins.io/pangolin-testrail-connector)
+[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/pangolin-testrail-connector.svg?color=blue)](https://plugins.jenkins.io/pangolin-testrail-connector)
+
 ![](https://docs.railflow.io/img/banner.png)
 
 **Pangolin is now Railflow!**
